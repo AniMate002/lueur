@@ -5,10 +5,40 @@ import { GoPerson } from "react-icons/go";
 import { IoPencil } from "react-icons/io5";
 import { MdOutlinePassword } from "react-icons/md";
 import { NavLink } from 'react-router-dom';
-
+import axios from 'axios'
+import { useMutation } from "@tanstack/react-query"
+import toast from 'react-hot-toast';
 
 
 const SignUpPage = () => {
+
+    const { mutate, isLoading, isError, isPending, error } = useMutation({
+        mutationFn: async ({email, username, fullname, password}) => {
+            try{
+                const res = await fetch("/api/auth/signup", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({email, username, fullname, password})
+                })
+
+                
+                const data = await res.json()
+
+                if(data.error) throw new Error(data.error)
+                console.log(data)
+                toast.success("Account created successfully")
+
+                return data
+
+            }catch(e){
+                toast.error(e.message)
+                console.log(e.message)
+            }
+        }
+    })
+    
 
     const [formData, setFormData] = useState({
         email: "",
@@ -18,9 +48,11 @@ const SignUpPage = () => {
     })
 
 
+
     const handleSubmit = (e) => {
         e.preventDefault()
         console.log(formData)
+        mutate(formData)
     }
 
     const handleInputChange = (e) => {
@@ -49,7 +81,14 @@ const SignUpPage = () => {
                     <MdOutlinePassword />
                     <input name='password' value={formData.password} onChange={handleInputChange} type="password" className="w-full" placeholder="Password" />
                 </label>
-                <button className="btn w-full rounded-full">Sign up</button>
+                <button disabled={isPending} className="btn w-full rounded-full">
+                    {
+                        isPending ? 
+                        <span className="loading loading-ring loading-lg"></span>
+                        :
+                        <span>Sign up</span>
+                    }
+                </button>
             </form>
             <h4 className='mt-6 text-slate-400 mb-2'>Already have an account?</h4>
             <NavLink to={'/login'} className="btn btn-primary rounded-full w-[350px]">Log in</NavLink>

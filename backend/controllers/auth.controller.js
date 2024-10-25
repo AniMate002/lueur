@@ -7,7 +7,7 @@ export const signup = async (req, res) => {
         const {username, fullname, password, email} = req.body
 
         if(password.length < 6){
-            return res.status(401).json({error: "Password is too short."})
+            return res.status(400).json({error: "Password is too short."})
         }
 
         let foundUser = await User.findOne({username})
@@ -32,7 +32,7 @@ export const signup = async (req, res) => {
         }else{
             return res.status(401).json({error: "Invalid user data."})
         }
-
+        // return res.status(200).json({message: "IT WORKS"})
 
     }catch(e){
         console.log("Error in sign up controller: ", e.message)
@@ -46,14 +46,14 @@ export const login = async (req, res) => {
         const {username, password} = req.body
         const user = await User.findOne({username})
         if(!user){
-            return res.status(401).json({error: "User was not found."})
+            return res.status(404).json({error: "User was not found."})
         }
 
         const isPasswordCorrrect = await bcrypt.compare(password, user?.password || "") //user?.password || "" - this condition is compulsary otherwaise bcryptjs with throw error
         if(isPasswordCorrrect){
             generateTokenAndSetCookie(user._id, res)
         }else{
-            return res.status(401).json({error: "Password is incorrect."})
+            return res.status(400).json({error: "Password is incorrect."})
         }
 
         return res.status(200).json(user)

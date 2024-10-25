@@ -7,6 +7,7 @@ import dotenv from 'dotenv'
 import connectMongoDB from "./db/connectMongoDB.js"
 import cookieParser from "cookie-parser"
 import { v2 as cloudinary} from "cloudinary" // api for image hosting
+import cors from 'cors'
 
 dotenv.config()
 cloudinary.config({
@@ -17,6 +18,13 @@ cloudinary.config({
 
 const app = express()
 const PORT = process.env.PORT || 5000
+
+// Настраиваем CORS
+// app.use(cors({
+//     origin: 'http://localhost:3000',  // разрешаем доступ только с фронтенд-сервера
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//     allowedHeaders: ['Content-Type'],
+//   }));
 
 app.use(express.json()) // helps to get data from req.body from POST method
 app.use(express.urlencoded({ extended: true })) //to parse form data(urlencoded)
