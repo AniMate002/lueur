@@ -9,6 +9,7 @@ import Logo from '../public/logo.png'
 import ProfilePage from './pages/profile/ProfilePage'
 import Header from './pages/components/layout/Header'
 import LeftSideBar from './pages/components/layout/LeftSideBar/LeftSideBar'
+import RightSideBar from './pages/components/layout/RightSideBar/RightSideBar'
 
 function App() {
 
@@ -48,7 +49,7 @@ function App() {
   return (
     <div className='text-white open-sans-my bg-[rgb(18,19,26)] w-[100vw] h-[100vh] overflow-hidden'>
       {authUser ? <Header /> : ""}
-      <div className='flex h-max'>
+      <div className='flex h-fit'>
         <LeftSideBar />
         <Routes>
           <Route path='/' element={authUser ? <HomePage /> : <Navigate to={'/login'}/>}/>
@@ -56,6 +57,7 @@ function App() {
           <Route path='/login' element={!authUser ? <LogInPage /> : <Navigate to={'/'}/>}/>
           <Route path='/profile/:username' element={authUser ? <ProfilePage /> : <LogInPage />}/>
         </Routes>
+        <RightSideBar />
       </div>
       <Toaster />
     </div>

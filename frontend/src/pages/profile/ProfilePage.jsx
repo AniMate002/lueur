@@ -1,12 +1,22 @@
 import { useQuery } from '@tanstack/react-query'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import Logo from "../../../public/logo.png"
+import ProfileCard from './ProfileCard'
+import { UserNotFound } from './UserNotFound'
+import LeftContent from './LeftContent/LeftContent'
+import RightContent from './RightContent/RightContent'
 
 
-const ProfilePage = () => {
+
+const ProfilePage = () => { 
+    const [isMyPage, setIsMyPage] = useState(false)
     const { username } = useParams()
-    const { data: userProfile, isLoading } = useQuery({
+    const { data: authUser, isLoading: authIsLoading} = useQuery({queryKey: ['authUser']})
+
+    
+
+    const { data: userProfile, isLoading, isError, error } = useQuery({
         queryKey: ['userProfile'],
         queryFn: async () => {
             try {
@@ -22,21 +32,44 @@ const ProfilePage = () => {
                 console.log(error.message)
                 throw new Error(error)
             }
-        }
+        },
+        retry: false
     })
-    // const {data: authUser} = useQuery({queryKey: ['authUser']})
 
-    if(isLoading){
-        return (
-          <div className='w-[100vw] h-[100vh] bg-black flex items-center justify-center flex-col'>
-            <img src={Logo} alt="logo" className='w-[400px]'/>
-            <span className="loading loading-ring loading-lg"></span>
-          </div>
-        )
+    useEffect(() => {
+      setIsMyPage(authUser?._id.toString() === userProfile?._id.toString())
+      console.log("IS_MY_PAGE: ", authUser?._id.toString() === userProfile?._id.toString())
+    }, [userProfile, authUser, username])
+
+    const { data: userPosts, isLoading: isLoadingPosts, isError: isErrorPosts } = useQuery({
+      queryKey: ['userPosts'],
+      queryFn: async () => { 
+          try{
+            const res = await fetch(`/api/posts/user/${username}`)
+            const data = await res.json()
+            if(data.error) throw new Error(data.error)
+            console.log("userPosts:", data)
+            return data
+          }catch(error){
+            console.log(error.message)
+            throw new Error(error)
+        }
       }
+    })
+
+    if (isError || isErrorPosts) {
+      return <UserNotFound message={error.message} />;
+    }
+    
 
   return (
-    <div className=''>ProfilePage: {userProfile.username} </div>
+    <div className='m-10 w-full scroll-smooth h-[84vh] scrollbar-thumb-slate-800 scrollbar-thin scrollbar-track-transparent overflow-y-scroll'>
+      <ProfileCard isMyPage={isMyPage}/>
+      <div className='flex gap-6 mt-8'>
+        <LeftContent />
+        <RightContent isMyPage={isMyPage}/>
+      </div>
+    </div>
   )
 }
 
