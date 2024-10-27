@@ -63,7 +63,7 @@ const ProfilePage = () => {
     
 
   return (
-    <div className='m-10 w-full scroll-smooth h-[84vh] scrollbar-thumb-slate-800 scrollbar-thin scrollbar-track-transparent overflow-y-scroll'>
+    <div className='px-10 pt-10 w-full scroll-smooth h-[89vh] scrollbar-thumb-slate-800 scrollbar-thin scrollbar-track-transparent overflow-y-scroll'>
       <ProfileCard isMyPage={isMyPage}/>
       <div className='flex gap-6 mt-8'>
         <LeftContent />

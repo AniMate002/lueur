@@ -14,26 +14,24 @@ import RightSideBar from './pages/components/layout/RightSideBar/RightSideBar'
 function App() {
 
   const { data: authUser, isLoading } = useQuery({
-    queryKey: ['authUser'],
-    queryFn: async () => {
-      try{
-        const res = await fetch("/api/auth/me")
-        const data = await res.json()
-
-        if(data.error) throw new Error(data.error)
-        console.log("Auth is here", data)
-        // toas.success("Account created successfully")
-
-        return data
-
-    }catch(e){
-        // toast.error(e.message)
-        console.log(e.message)
-        throw new Error(e)
-    }
-    },
-    retry: false
-  }) 
+		// we use queryKey to give a unique name to our query and refer to it later
+		queryKey: ["authUser"],
+		queryFn: async () => {
+			try {
+				const res = await fetch("/api/auth/me");
+				const data = await res.json();
+				if (data.error) return null;
+				if (!res.ok) {
+					throw new Error(data.error || "Something went wrong");
+				}
+				console.log("authUser is here:", data);
+				return data;
+			} catch (error) {
+				throw new Error(error);
+			}
+		},
+		retry: false,
+	});
 
 
 
@@ -50,14 +48,18 @@ function App() {
     <div className='text-white open-sans-my bg-[rgb(18,19,26)] w-[100vw] h-[100vh] overflow-hidden'>
       {authUser ? <Header /> : ""}
       <div className='flex h-fit'>
-        <LeftSideBar />
+      {authUser ? <LeftSideBar /> : ""}
+
+        {/* <LeftSideBar /> */}
         <Routes>
           <Route path='/' element={authUser ? <HomePage /> : <Navigate to={'/login'}/>}/>
           <Route path='/signup' element={!authUser ? <SignUpPage /> : <Navigate to={'/'}/>}/>
           <Route path='/login' element={!authUser ? <LogInPage /> : <Navigate to={'/'}/>}/>
           <Route path='/profile/:username' element={authUser ? <ProfilePage /> : <LogInPage />}/>
         </Routes>
-        <RightSideBar />
+      {authUser ? <RightSideBar /> : ""}
+
+        {/* <RightSideBar /> */}
       </div>
       <Toaster />
     </div>

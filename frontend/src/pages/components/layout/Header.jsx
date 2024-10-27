@@ -4,8 +4,11 @@ import { IoPersonAddOutline } from "react-icons/io5";
 import { AiOutlineMessage } from "react-icons/ai";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { FaCaretDown } from "react-icons/fa";
+import { useQuery } from '@tanstack/react-query';
 
 const Header = () => {
+    const { data: authUser, isLoading } = useQuery({queryKey: ['authUser']})
+
   return (
     <div className='w-full px-16 py-8 flex items-center justify-between bg-[rgb(28,28,37)] border-b-[1px] border-slate-800'>
         <h3 className='raleway-my tracking-widest text-3xl uppercase'>Lueur</h3>
@@ -17,11 +20,16 @@ const Header = () => {
             <IoPersonAddOutline size={23}/>
             <AiOutlineMessage size={23}/>
             <IoIosNotificationsOutline size={23}/>
-            <div className="avatar">
-                <div className="w-12 rounded-full">
-                    <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+            {
+                isLoading ? 
+                <div className='skeleton w-12 h-12 rounded-full'></div>
+                :
+                <div className="avatar">
+                    <div className="w-12 rounded-full">
+                        <img src={authUser.profileImg} />
+                    </div>
                 </div>
-            </div>
+            }
             <FaCaretDown />
         </div>
     </div>

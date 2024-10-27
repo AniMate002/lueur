@@ -1,12 +1,50 @@
 
 
 
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import React from 'react'
+import toast from 'react-hot-toast'
+import { useParams } from 'react-router-dom'
 
 const ProfileCard = ({isMyPage}) => {
+    // const { username } = useParams()
+    const queryClient = useQueryClient()
+    const { data: authUser, isLoading: authIsLoading} = useQuery({queryKey: ['authUser']})
     const { data:userProfile, isLoading } = useQuery({queryKey: ['userProfile']})
     const { data:userPosts, postsIsLoading } = useQuery({queryKey: ['userPosts']})
+
+    const { mutate } = useMutation({
+        mutationFn: async () => {
+            try {
+                const res = await fetch(`/api/users/follow/${userProfile._id}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: ""
+                })
+
+                const data = await res.json()
+
+                if(data.error) throw new Error(data.error)
+                console.log("FOLLOW_UNFOLLOW: ", data)
+                
+                queryClient.invalidateQueries({queryKey: ['authUser']})
+                queryClient.invalidateQueries({queryKey: ['userProfile']})
+
+                return data
+            } catch (error) {
+                console.log(error.message)
+                toast.error(error.message)
+            }
+        }
+    })
+
+    const handleFollow = () => {
+        // alert(username)
+        mutate()
+    }
+
   return (
     <div className='rounded-xl overflow-hidden w-full bg-[rgb(28,28,37)]'>
         <div className='h-[350px] overflow-hidden flex items-center justify-center'>
@@ -53,7 +91,14 @@ const ProfileCard = ({isMyPage}) => {
                 <div className='flex items-center gap-6 mr-32 py-4'>
                     {
                         !isMyPage ? 
-                        <button className='bg-[rgb(0,119,254)] rounded-xl px-6 py-2'>Follow</button>
+                        <button onClick={handleFollow} className={` ${ authUser.following.includes(userProfile._id.toString()) ? " border-2 border-[rgb(0,119,254)] text-slate-300" : " bg-[rgb(0,119,254)]"} rounded-xl px-6 py-2`}>
+                        {
+                            authUser.following.includes(userProfile._id.toString()) ?
+                            "Unfollow"
+                            :
+                            "Follow"
+                        }
+                        </button>
                         :
                         <button className='bg-[rgb(0,119,254)] rounded-xl px-6 py-2'>Edit profile</button>
                     }

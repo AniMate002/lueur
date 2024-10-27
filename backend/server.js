@@ -26,7 +26,7 @@ const PORT = process.env.PORT || 5000
 //     allowedHeaders: ['Content-Type'],
 //   }));
 
-app.use(express.json()) // helps to get data from req.body from POST method
+app.use(express.json({ limit: "10mb" })) // helps to get data from req.body from POST method
 app.use(express.urlencoded({ extended: true })) //to parse form data(urlencoded)
 app.use(cookieParser())
 // add here cookieParser middleware

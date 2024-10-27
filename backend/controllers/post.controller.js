@@ -18,6 +18,7 @@ export const createPost = async (req, res) => {
         if(img){
             const res = await cloudinary.uploader.upload(img)
             img = res.secure_url
+            newPost.img = img
         }
         newPost.text = text || ""
         newPost.likes = []

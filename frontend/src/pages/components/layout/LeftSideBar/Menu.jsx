@@ -10,9 +10,9 @@ import { PiScroll } from "react-icons/pi";
 const Menu = () => {
   return (
     <div className='mt-10 flex flex-col gap-10'>
-        <NavLink to={'/feed'} className={"flex items-center gap-6 text-md font-bold montserrat-my text-slate-300"}>
+        <NavLink to={'/'} className={"flex items-center gap-6 text-md font-bold montserrat-my text-slate-300"}>
             <TbTemplate  size={30}/>
-            <span>Feed</span>
+            <span>News</span>
         </NavLink>
         
         <NavLink to={'/friends'} className={"flex items-center gap-6 text-md font-bold montserrat-my text-slate-300"}>
