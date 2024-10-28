@@ -1,25 +1,24 @@
 import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 import toast from 'react-hot-toast'
-import SinglePost from '../../../components/SinglePost'
 import SkeletonPost from '../../../components/SkeletonPost'
+import SinglePost from '../../../components/SinglePost'
 
 
 
 
+const FollowingPosts = () => {
 
-const AllPosts = () => {
-
-    const { data:allPosts, isLoading, isError, error} = useQuery({
-        queryKey: ['allPosts'],
+    const { data:followingPosts, isLoading, isError, error } = useQuery({
+        queryKey: ['followingPosts'],
         queryFn: async () => {
             try {
-                const res = await fetch('/api/posts/all')
+                const res = await fetch("/api/posts/following")
                 const data = await res.json()
 
                 if(data.error) throw new Error(data.error)
-                
-                console.log("ALL_POSTS: ", data)
+                console.log("FOLLOWING_POSTS", data)
+
                 return data
             } catch (error) {
                 console.log(error.message)
@@ -29,20 +28,18 @@ const AllPosts = () => {
     })
 
     if(isError){
-        return <h2>{error.message}</h2>
+        return <div>{error.message}</div>
     }
 
     if(isLoading){
-        return (
-            <SkeletonPost />
-        )
+        return <SkeletonPost />
     }
 
-    const renderedPosts = allPosts?.map(post => <SinglePost {...post} key={post?._id}/>)
+    const renderedPosts = followingPosts?.map(post => <SinglePost key={post._id} {...post}/>)
 
     return (
         <div>{renderedPosts}</div>
     )
 }
 
-export default AllPosts
+export default FollowingPosts

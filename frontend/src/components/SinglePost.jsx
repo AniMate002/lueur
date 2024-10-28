@@ -31,6 +31,7 @@ const SinglePost = ({comments, createdAt, likes, user, text, _id, img}) => {
                 queryClient.invalidateQueries({queryKey: ['userProfile']})
                 queryClient.invalidateQueries({queryKey: ['userPosts']})
                 queryClient.invalidateQueries({queryKey: ['allPosts']})
+                queryClient.invalidateQueries({queryKey: ['followingPosts']})
 
                 return data
 
@@ -58,7 +59,12 @@ const SinglePost = ({comments, createdAt, likes, user, text, _id, img}) => {
                 
                 console.log("POST_COMMENT: ", data)
 
+                queryClient.invalidateQueries({queryKey: ['authUser']})
+                queryClient.invalidateQueries({queryKey: ['userProfile']})
                 queryClient.invalidateQueries({queryKey: ['userPosts']})
+                queryClient.invalidateQueries({queryKey: ['allPosts']})
+                queryClient.invalidateQueries({queryKey: ['followingPosts']})
+
                 setComment("")
                 return data
 
