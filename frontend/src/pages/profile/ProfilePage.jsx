@@ -12,11 +12,11 @@ import RightContent from './RightContent/RightContent'
 const ProfilePage = () => { 
     const [isMyPage, setIsMyPage] = useState(false)
     const { username } = useParams()
-    const { data: authUser, isLoading: authIsLoading} = useQuery({queryKey: ['authUser']})
+    const { data: authUser, isLoading: authIsLoadin} = useQuery({queryKey: ['authUser']})
 
     
 
-    const { data: userProfile, isLoading, isError, error } = useQuery({
+    const { data: userProfile, isLoading, isError, error} = useQuery({
         queryKey: ['userProfile'],
         queryFn: async () => {
             try {
@@ -41,7 +41,7 @@ const ProfilePage = () => {
       console.log("IS_MY_PAGE: ", authUser?._id.toString() === userProfile?._id.toString())
     }, [userProfile, authUser, username])
 
-    const { data: userPosts, isLoading: isLoadingPosts, isError: isErrorPosts } = useQuery({
+    const { data: userPosts, isLoading: isLoadingPosts, isError: isErrorPosts, error: errorPosts } = useQuery({
       queryKey: ['userPosts'],
       queryFn: async () => { 
           try{
@@ -58,7 +58,7 @@ const ProfilePage = () => {
     })
 
     if (isError || isErrorPosts) {
-      return <UserNotFound message={error.message} />;
+      return <UserNotFound message={error?.message || errorPosts.message} />;
     }
     
 
