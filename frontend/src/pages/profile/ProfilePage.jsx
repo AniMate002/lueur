@@ -16,7 +16,7 @@ const ProfilePage = () => {
 
     
 
-    const { data: userProfile, isLoading, isError, error} = useQuery({
+    const { data: userProfile, isLoading, isError, error, refetch} = useQuery({
         queryKey: ['userProfile'],
         queryFn: async () => {
             try {
@@ -39,6 +39,7 @@ const ProfilePage = () => {
     useEffect(() => {
       setIsMyPage(authUser?._id.toString() === userProfile?._id.toString())
       console.log("IS_MY_PAGE: ", authUser?._id.toString() === userProfile?._id.toString())
+      refetch()
     }, [userProfile, authUser, username])
 
     const { data: userPosts, isLoading: isLoadingPosts, isError: isErrorPosts, error: errorPosts } = useQuery({

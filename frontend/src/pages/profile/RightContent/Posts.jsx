@@ -1,11 +1,16 @@
 
 import { useQuery } from '@tanstack/react-query'
-import React from 'react'
+import React, { useEffect } from 'react'
 import SinglePost from '../../../components/SinglePost'
+import { useParams } from 'react-router-dom'
 
 const Posts = () => {
-    const { data:userPosts, isLoading: postsIsLoading } = useQuery({queryKey: ['userPosts']})
-    if(postsIsLoading){
+    const { username } = useParams()
+    const { data:userPosts, isLoading: postsIsLoading, refetch, isFetching } = useQuery({queryKey: ['userPosts']})
+    useEffect(() => {
+        refetch()
+    }, [username])
+    if(postsIsLoading || isFetching){
         return <div className='skeleton w-full h-[240px] mt-8'></div>
     }
     if(userPosts.length === 0){

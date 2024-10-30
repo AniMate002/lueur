@@ -32,6 +32,8 @@ const SinglePost = ({comments, createdAt, likes, user, text, _id, img}) => {
                 queryClient.invalidateQueries({queryKey: ['userPosts']})
                 queryClient.invalidateQueries({queryKey: ['allPosts']})
                 queryClient.invalidateQueries({queryKey: ['followingPosts']})
+                queryClient.invalidateQueries({queryKey: ['notifications']})
+
 
                 return data
 

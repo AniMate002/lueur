@@ -98,7 +98,7 @@ export const updateUser = async (req, res) => {
         const userId = req.user._id
 
         const user = await User.findById(userId)
-        if(!user) return res.status(401).json({error: "User was not found"})
+        if(!user) return res.status(404).json({error: "User not found"})
         
         // if(currentPassword === newPassword) return res.status(400).json({error: "Old and new passwords are identical"})
         if(currentPassword && newPassword){
@@ -153,3 +153,4 @@ export const updateUser = async (req, res) => {
         return res.status(500).json({error: "Internal server error in updating user"})
     }
 }
+

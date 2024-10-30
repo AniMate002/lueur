@@ -31,6 +31,7 @@ const ProfileCard = ({isMyPage}) => {
                 
                 queryClient.invalidateQueries({queryKey: ['authUser']})
                 queryClient.invalidateQueries({queryKey: ['userProfile']})
+                queryClient.invalidateQueries({queryKey: ['notifications']})
 
                 return data
             } catch (error) {
@@ -91,9 +92,9 @@ const ProfileCard = ({isMyPage}) => {
                 <div className='flex items-center gap-6 mr-32 py-4'>
                     {
                         !isMyPage ? 
-                        <button onClick={handleFollow} className={` ${ authUser.following.includes(userProfile._id.toString()) ? " border-2 border-[rgb(0,119,254)] text-slate-300" : " bg-[rgb(0,119,254)]"} rounded-xl px-6 py-2`}>
+                        <button onClick={handleFollow} className={` ${ authUser.following.some(user => user._id.toString() === userProfile._id.toString()) ? " border-2 border-[rgb(0,119,254)] text-slate-300" : " bg-[rgb(0,119,254)]"} rounded-xl px-6 py-2`}>
                         {
-                            authUser.following.includes(userProfile._id.toString()) ?
+                            authUser.following.some(user => user._id.toString() === userProfile._id.toString()) ?
                             "Unfollow"
                             :
                             "Follow"

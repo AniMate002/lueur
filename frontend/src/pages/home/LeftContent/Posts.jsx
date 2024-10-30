@@ -6,7 +6,7 @@ import FollowingPosts from './FollowingPosts'
 
 
 const Posts = () => {
-    const [isAllPosts, setIsAllPosts] = useState(false)
+    const [isAllPosts, setIsAllPosts] = useState(true)
     return (
         <div className='mt-8'>
             <div className='flex items-center text-slate-400 w-full justify-center gap-4'>

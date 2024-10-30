@@ -29,18 +29,26 @@ const SuggestedUsers = () => {
     }
 
     if(isLoading){
-        return <h2>Loading suggestedUsers</h2>
+        return <div className='skeleton w-full h-[200px]'></div>
     }
+
 
     const renderedUsers = suggestedUsers?.map(user => <SingleSuggestedUser {...user} key={user?._id}/>)
     
+
+
     return (
         <div className='rounded-xl bg-[rgb(28,28,37)] mt-6 montserrat-my pb-6'>
             <p className='text-slate-300 pt-6 pl-6'>Suggested Users</p>
             <div className='divider'></div>
             
             <div className='flex items-center flex-col gap-4 w-full px-6'>
-                {renderedUsers}
+                {
+                    suggestedUsers.length === 0 ? 
+                    <p className='text-slate-500'>No suggested users</p>
+                    :
+                    renderedUsers
+                }
             </div>
         
 
