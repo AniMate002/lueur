@@ -15,14 +15,14 @@ const Menu = () => {
             <span>News</span>
         </NavLink>
         
-        <NavLink to={'/friends'} className={"flex items-center gap-6 text-md font-bold montserrat-my text-slate-300"}>
+        <NavLink to={'/following'} className={"flex items-center gap-6 text-md font-bold montserrat-my text-slate-300"}>
             <BsPeople  size={30}/>
-            <span>Friends</span>
+            <span>Following</span>
         </NavLink>
         
-        <NavLink to={'/events'} className={"flex items-center gap-6 text-md font-bold montserrat-my text-slate-300"}>
+        <NavLink to={'/notifications'} className={"flex items-center gap-6 text-md font-bold montserrat-my text-slate-300"}>
             <CiCalendar size={35}/>
-            <span>Events</span>
+            <span>Notifications</span>
         </NavLink>
 
         <NavLink to={'/photos'} className={"flex items-center gap-6 text-md font-bold montserrat-my text-slate-300"}>

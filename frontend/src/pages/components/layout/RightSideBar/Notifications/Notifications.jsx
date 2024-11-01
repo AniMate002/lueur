@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 import toast from 'react-hot-toast'
 import SingleNotificationSideBar from './SingleNotificationSideBar'
+import { Link } from 'react-router-dom'
 
 const Notifications = () => {
     const { data: notifications, isLoading, isError, error } = useQuery({
@@ -29,7 +30,7 @@ const Notifications = () => {
     }
 
 
-    const renderedNotifications = notifications?.map(notification => <SingleNotificationSideBar {...notification} key={notification._id}/>)
+    const renderedNotifications = notifications?.slice(0, 5).map(notification => <SingleNotificationSideBar {...notification} key={notification._id}/>)
 
     return (
         <>
@@ -42,6 +43,7 @@ const Notifications = () => {
                     renderedNotifications
                 }
             </div>
+            <Link to={'/notifications'} className='text-slate-500 bg-[rgb(28,28,37)] open-sans-my uppercase w-fit mx-auto px-6 py-2 rounded-xl tracking-widest text-sm text-center block hover:underline mt-4'>See notifications</Link>
         </>
     )
 }

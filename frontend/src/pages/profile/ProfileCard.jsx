@@ -31,7 +31,7 @@ const ProfileCard = ({isMyPage}) => {
                 
                 queryClient.invalidateQueries({queryKey: ['authUser']})
                 queryClient.invalidateQueries({queryKey: ['userProfile']})
-                queryClient.invalidateQueries({queryKey: ['notifications']})
+                // queryClient.invalidateQueries({queryKey: ['notifications']})
 
                 return data
             } catch (error) {

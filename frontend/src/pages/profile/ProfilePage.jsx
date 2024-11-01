@@ -16,7 +16,7 @@ const ProfilePage = () => {
 
     
 
-    const { data: userProfile, isLoading, isError, error, refetch} = useQuery({
+    const { data: userProfile, isLoading, isError, error, refetch: refetchUserProfile} = useQuery({
         queryKey: ['userProfile'],
         queryFn: async () => {
             try {
@@ -36,27 +36,35 @@ const ProfilePage = () => {
         retry: false
     })
 
-    useEffect(() => {
-      setIsMyPage(authUser?._id.toString() === userProfile?._id.toString())
-      console.log("IS_MY_PAGE: ", authUser?._id.toString() === userProfile?._id.toString())
-      refetch()
-    }, [userProfile, authUser, username])
+    
 
-    const { data: userPosts, isLoading: isLoadingPosts, isError: isErrorPosts, error: errorPosts } = useQuery({
+    
+    const { data: userPosts, isLoading: isLoadingPosts, isError: isErrorPosts, error: errorPosts, refetch: refetchUserPosts } = useQuery({
       queryKey: ['userPosts'],
       queryFn: async () => { 
-          try{
-            const res = await fetch(`/api/posts/user/${username}`)
-            const data = await res.json()
-            if(data.error) throw new Error(data.error)
+        try{
+          const res = await fetch(`/api/posts/user/${username}`)
+          const data = await res.json()
+          if(data.error) throw new Error(data.error)
             console.log("userPosts:", data)
-            return data
+          return data
           }catch(error){
             console.log(error.message)
             throw new Error(error)
+          }
         }
-      }
     })
+      
+    useEffect(() => {
+      refetchUserProfile()
+      refetchUserPosts()
+    }, [username])
+
+    useEffect(() => {
+      setIsMyPage(authUser?._id.toString() === userProfile?._id.toString())
+      console.log("IS_MY_PAGE: ", authUser?._id.toString() === userProfile?._id.toString())
+      // refetchUserProfile()
+    }, [username, userProfile, authUser])
 
     if (isError || isErrorPosts) {
       return <UserNotFound message={error?.message || errorPosts.message} />;

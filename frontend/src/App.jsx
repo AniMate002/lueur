@@ -10,6 +10,7 @@ import ProfilePage from './pages/profile/ProfilePage'
 import Header from './pages/components/layout/Header'
 import LeftSideBar from './pages/components/layout/LeftSideBar/LeftSideBar'
 import RightSideBar from './pages/components/layout/RightSideBar/RightSideBar'
+import FollowingPage from './pages/following/FollowingPage'
 
 function App() {
 
@@ -56,6 +57,7 @@ function App() {
           <Route path='/signup' element={!authUser ? <SignUpPage /> : <Navigate to={'/'}/>}/>
           <Route path='/login' element={!authUser ? <LogInPage /> : <Navigate to={'/'}/>}/>
           <Route path='/profile/:username' element={authUser ? <ProfilePage /> : <LogInPage />}/>
+          <Route path='/following' element={authUser ? <FollowingPage /> :  <LogInPage />}/>
         </Routes>
       {authUser ? <RightSideBar /> : ""}
 

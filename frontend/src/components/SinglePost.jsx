@@ -7,8 +7,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { FaHeart } from "react-icons/fa6";
 import SingleComment from './SingleComment';
+import { useNavigate } from 'react-router-dom';
 
 const SinglePost = ({comments, createdAt, likes, user, text, _id, img}) => {
+    const navigate = useNavigate()
     const [comment, setComment] = useState("")
     const { data:authUser, isLoading } = useQuery({queryKey: ['authUser']})
     const queryClient = useQueryClient()
@@ -93,12 +95,12 @@ const SinglePost = ({comments, createdAt, likes, user, text, _id, img}) => {
   return (
     <div className='bg-[rgb(28,28,37)] mt-6 rounded-xl'>
         <div className='flex items-center gap-4 p-6 pb-0'>
-            <div className="avatar">
+            <div onClick={() => navigate(`/profile/${user.username}`)} className="avatar cursor-pointer">
                 <div className="w-16 rounded-full">
                     <img src={user.profileImg} />
                 </div>
             </div>
-            <div>
+            <div onClick={() => navigate(`/profile/${user.username}`)} className='cursor-pointer'>
                 <p className='text-slate-300'>{user.fullname}</p>
                 <p className='text-sm text-slate-400'>{(new Date(createdAt).toLocaleDateString())}</p>
             </div>

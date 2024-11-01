@@ -10,7 +10,7 @@ const Posts = () => {
     useEffect(() => {
         refetch()
     }, [username])
-    if(postsIsLoading || isFetching){
+    if(postsIsLoading){
         return <div className='skeleton w-full h-[240px] mt-8'></div>
     }
     if(userPosts.length === 0){
