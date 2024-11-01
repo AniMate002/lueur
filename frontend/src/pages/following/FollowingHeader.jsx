@@ -5,12 +5,11 @@ import { AiFillFunnelPlot } from "react-icons/ai";
 
 const FollowingHeader = ({setSortType, sortType, searchQuery, setSearchQuery}) => {
 
-
-    const handleSearch = e => {
-        e.preventDefault()
-        // alert(searchQuery)
+    const handleClearFilters = () => {
         setSearchQuery("")
+        setSortType("default")
     }
+
     
     return (
         <div className='flex items-center montserrat-my justify-between'>
@@ -20,10 +19,10 @@ const FollowingHeader = ({setSortType, sortType, searchQuery, setSearchQuery}) =
             {/* SORT SECTION */}
             <div className='flex items-center gap-6'>
 
-                <form onSubmit={handleSearch} className="input input-bordered flex items-center gap-2 focus-within:outline-none border-none bg-[rgb(28,28,37)] text-slate-300">
+                <div className="input input-bordered flex items-center gap-2 focus-within:outline-none border-none bg-[rgb(28,28,37)] text-slate-300">
                     <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} type="text" className="grow" placeholder="Search" />
-                    <button type='submit'><CiSearch className='text-slate-500' size={20}/></button>
-                </form>
+                    <CiSearch className='text-slate-500' size={20}/>
+                </div>
 
                 <select value={sortType} onChange={e => setSortType(e.target.value)} defaultValue={"default"} className="select w-full focus-within:outline-none border-none bg-[rgb(28,28,37)] text-slate-300">
                     <option disabled value={"default"}>Order by:</option>
@@ -33,7 +32,7 @@ const FollowingHeader = ({setSortType, sortType, searchQuery, setSearchQuery}) =
                     <option value={"follasc"} >Followers desc</option>
                 </select>
 
-                <button className='bg-[rgb(28,28,37)] text-slate-400 px-4 py-4 rounded-xl'>
+                <button onClick={handleClearFilters} className='bg-[rgb(28,28,37)] text-slate-400 px-4 py-4 rounded-xl'>
                     <AiFillFunnelPlot />
                 </button>
             </div>

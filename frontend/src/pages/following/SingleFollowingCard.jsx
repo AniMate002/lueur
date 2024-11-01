@@ -1,10 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import React from 'react'
+import React, { useState } from 'react'
+import { useNavigate} from 'react-router-dom'
 
 
 
-
-const SingleFollowingCard = ({username, profileImg, fullname, bio, _id}) => {
+const SingleFollowingCard = ({username, profileImg, fullname, bio, _id, coverImg}) => {
+    const navigate = useNavigate()
+    const [coverLoading, setCoverLoading] = useState(true)
     const queryClient = useQueryClient()
 
     const { mutate:followUnfollowMutate } = useMutation({
@@ -40,17 +42,23 @@ const SingleFollowingCard = ({username, profileImg, fullname, bio, _id}) => {
     }
 
     return (
-        <div className='rounded-xl bg-[rgb(28,28,37)] h-[320px]'>
-            <div className='w-full rounded-t-xl overflow-hidden h-[150px] flex items-center justify-center'>
-                <img src={'https://images.pexels.com/photos/2101187/pexels-photo-2101187.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'} alt="coverimg" />
+        <div className={`rounded-xl bg-[rgb(28,28,37)] h-[320px]`}>
+            <div className="w-full rounded-t-xl overflow-hidden h-[150px] flex items-center justify-center">
+                {
+                    coverLoading ? 
+                    <span className="loading loading-ring loading-lg"></span>
+                    :
+                    ""
+                }
+                <img src={coverImg ? coverImg : 'https://images.pexels.com/photos/2101187/pexels-photo-2101187.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'} alt="coverimg" />
             </div>
             <div className='flex items-center gap-6 mx-6 mt-[-45px]'>
-                <div className="avatar bg-blue-400 p-[2px] rounded-full">
+                <div onClick={() => navigate(`/profile/${username}`)} className="avatar bg-blue-400 p-[2px] rounded-full cursor-pointer">
                     <div className="w-32 rounded-full">
                         <img src={profileImg} />
                     </div>
                 </div>
-                <div>
+                <div onClick={() => navigate(`/profile/${username}`)} className='cursor-pointer'>
                     <p className='montserrat-my tracking-wider font-bold text-xl mt-6'>{fullname}</p>
                     <p className='text-slate-500 text-sm'>@{username}</p>
                 </div>
