@@ -53,7 +53,7 @@ const ProfileCard = ({isMyPage}) => {
                 isLoading ?
                 ""
                 :
-                <img className='bg-[rgb(28,28,37)]' src={'https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'} alt="coverimg" />
+                <img className='bg-[rgb(28,28,37)]' src={!isLoading ? userProfile.coverImg : 'https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'} alt="coverimg" />
             }
         </div>
         
@@ -78,9 +78,9 @@ const ProfileCard = ({isMyPage}) => {
                       <p className='skeleton h-4 w-16 mt-4'></p>  
                     </div>
                     :
-                    <div>
-                        <p className='montserrat-my tracking-widest font-bold text-3xl'>{userProfile?.fullname}</p>
-                        <p className='text-slate-500'>@{userProfile?.username}</p>
+                    <div className=''>
+                        <p className='montserrat-my tracking-widest font-bold text-3xl bg-[rgb(38,38,43)] p-2 rounded-xl shadow-sm text-slate-200 shadow-[rgb(38,38,43)]'>{userProfile?.fullname}</p>
+                        <p className='text-slate-500 bg-[rgb(38,38,43)] p-2 rounded-xl w-fit mt-2'>@{userProfile?.username}</p>
                     </div>
                 }
             </div>

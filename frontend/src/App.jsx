@@ -11,6 +11,8 @@ import Header from './pages/components/layout/Header'
 import LeftSideBar from './pages/components/layout/LeftSideBar/LeftSideBar'
 import RightSideBar from './pages/components/layout/RightSideBar/RightSideBar'
 import FollowingPage from './pages/following/FollowingPage'
+import NotFoundPage from './pages/notfound/NotFoundPage'
+import NotificationsPage from './pages/notifications/NotificationsPage'
 
 function App() {
 
@@ -53,11 +55,13 @@ function App() {
 
         {/* <LeftSideBar /> */}
         <Routes>
+          <Route path='*' element={authUser ? <NotFoundPage /> : <LogInPage />}/>
           <Route path='/' element={authUser ? <HomePage /> : <Navigate to={'/login'}/>}/>
           <Route path='/signup' element={!authUser ? <SignUpPage /> : <Navigate to={'/'}/>}/>
           <Route path='/login' element={!authUser ? <LogInPage /> : <Navigate to={'/'}/>}/>
           <Route path='/profile/:username' element={authUser ? <ProfilePage /> : <LogInPage />}/>
           <Route path='/following' element={authUser ? <FollowingPage /> :  <LogInPage />}/>
+          <Route path='/notifications' element={authUser ? <NotificationsPage /> : <LogInPage />}/>
         </Routes>
       {authUser ? <RightSideBar /> : ""}
 

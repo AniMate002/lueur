@@ -26,7 +26,8 @@ const Notifications = () => {
     }
 
     if(isLoading){
-        return <h3>Loading Notifications</h3>
+        return <div className='skeleton w-full rounded-xl h-[100px]'></div>
+
     }
 
 
