@@ -4,7 +4,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import React from 'react'
 import toast from 'react-hot-toast'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 const ProfileCard = ({isMyPage}) => {
     // const { username } = useParams()
@@ -53,7 +53,7 @@ const ProfileCard = ({isMyPage}) => {
                 isLoading ?
                 ""
                 :
-                <img className='bg-[rgb(28,28,37)]' src={!isLoading ? userProfile.coverImg : 'https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'} alt="coverimg" />
+                <img className='bg-[rgb(28,28,37)] min-w-full min-h-full' src={!isLoading ? userProfile.coverImg : 'https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'} alt="coverimg" />
             }
         </div>
         
@@ -101,7 +101,7 @@ const ProfileCard = ({isMyPage}) => {
                         }
                         </button>
                         :
-                        <button className='bg-[rgb(0,119,254)] rounded-xl px-6 py-2'>Edit profile</button>
+                        <Link to={`/profile/${authUser.username}/update`} className='bg-[rgb(0,119,254)] rounded-xl px-6 py-2'>Edit profile</Link>
                     }
                     <div className='flex items-center justify-center flex-col gap-2 '>
                         <p className='font-light text-slate-400'>Posts</p>

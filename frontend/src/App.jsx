@@ -13,6 +13,7 @@ import RightSideBar from './pages/components/layout/RightSideBar/RightSideBar'
 import FollowingPage from './pages/following/FollowingPage'
 import NotFoundPage from './pages/notfound/NotFoundPage'
 import NotificationsPage from './pages/notifications/NotificationsPage'
+import UpdateProfilePage from './pages/updateprofile/UpdateProfilePage'
 
 function App() {
 
@@ -62,6 +63,7 @@ function App() {
           <Route path='/profile/:username' element={authUser ? <ProfilePage /> : <LogInPage />}/>
           <Route path='/following' element={authUser ? <FollowingPage /> :  <LogInPage />}/>
           <Route path='/notifications' element={authUser ? <NotificationsPage /> : <LogInPage />}/>
+          <Route path='/profile/:username/update' element={authUser ? <UpdateProfilePage /> : <LogInPage />}/>
         </Routes>
       {authUser ? <RightSideBar /> : ""}
 
