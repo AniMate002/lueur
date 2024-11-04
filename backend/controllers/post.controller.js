@@ -5,7 +5,7 @@ import { v2 as cloudinary } from "cloudinary"
 
 export const createPost = async (req, res) => {
     try{
-        const { text } = req.body
+        const { text, community } = req.body
         let { img } = req.body
         const user = await User.findById(req.user._id)
 
@@ -24,6 +24,8 @@ export const createPost = async (req, res) => {
         newPost.likes = []
         newPost.comments = []
         newPost.user = user._id
+        newPost.community = community
+        
         await newPost.save()
 
         return res.status(201).json(newPost)
@@ -138,6 +140,9 @@ export const getAllPosts = async (req, res) => {
         .populate({
             path: 'comments.user'
         })
+        .populate({
+            path: 'community'
+        })
 
         if(posts.length === 0) return res.status(200).json([])
 
@@ -166,6 +171,9 @@ export const getLikedPosts = async (req, res) => {
         .populate({
             path: 'user'
         })
+        .populate({
+            path: 'community'
+        })
 
         if(likedPosts.length === 0) return res.status(200).json([])
 
@@ -192,6 +200,9 @@ export const getFollowingPosts = async (req, res) => {
         })
         .populate({
             path: 'user'
+        })
+        .populate({
+            path: 'community'
         })
 
         if(followingPosts.length === 0) return res.status(200).json([])
@@ -220,6 +231,9 @@ export const getUserPosts = async (req, res) => {
         })
         .populate({
             path: 'user'
+        })
+        .populate({
+            path: 'community'
         })
 
         if(userPosts.length === 0) return res.status(200).json([])

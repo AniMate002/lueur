@@ -5,7 +5,7 @@ import { CiCalendar } from "react-icons/ci";
 import { TbTemplate } from "react-icons/tb";
 import { CiImageOn } from "react-icons/ci";
 import { PiScroll } from "react-icons/pi";
-
+import { PiBackpackLight } from "react-icons/pi";
 
 const Menu = () => {
   return (
@@ -18,6 +18,11 @@ const Menu = () => {
         <NavLink to={'/following'} className={"flex items-center gap-6 text-md font-bold montserrat-my text-slate-300"}>
             <BsPeople  size={30}/>
             <span>Following</span>
+        </NavLink>
+
+        <NavLink to={'/communities'} className={"flex items-center gap-6 text-md font-bold montserrat-my text-slate-300"}>
+            <PiBackpackLight size={35}/>
+            <span>Communities</span>
         </NavLink>
         
         <NavLink to={'/notifications'} className={"flex items-center gap-6 text-md font-bold montserrat-my text-slate-300"}>
@@ -34,6 +39,8 @@ const Menu = () => {
             <PiScroll size={35}/>
             <span>Files</span>
         </NavLink>
+
+
     </div>
   )
 }

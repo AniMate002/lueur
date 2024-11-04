@@ -14,6 +14,7 @@ import FollowingPage from './pages/following/FollowingPage'
 import NotFoundPage from './pages/notfound/NotFoundPage'
 import NotificationsPage from './pages/notifications/NotificationsPage'
 import UpdateProfilePage from './pages/updateprofile/UpdateProfilePage'
+import CommunitiesPage from './pages/communities/CommunitiesPage'
 
 function App() {
 
@@ -64,6 +65,7 @@ function App() {
           <Route path='/following' element={authUser ? <FollowingPage /> :  <LogInPage />}/>
           <Route path='/notifications' element={authUser ? <NotificationsPage /> : <LogInPage />}/>
           <Route path='/profile/:username/update' element={authUser ? <UpdateProfilePage /> : <LogInPage />}/>
+          <Route path='/communities' element={authUser ? <CommunitiesPage /> : <LogInPage />}/>
         </Routes>
       {authUser ? <RightSideBar /> : ""}
 

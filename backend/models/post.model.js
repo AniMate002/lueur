@@ -5,6 +5,7 @@ import { model, Schema } from "mongoose";
 const postSchema = new Schema({
     text: { type:String },
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true},
+    community: {type: Schema.Types.ObjectId, ref: 'Community'},
     img: { type: String },
     likes: [{type: Schema.Types.ObjectId, ref: 'User'}],
     comments: [
