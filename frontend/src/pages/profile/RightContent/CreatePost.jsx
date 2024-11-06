@@ -3,6 +3,7 @@ import { RiImageAddLine } from "react-icons/ri";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import React, { useRef, useState } from 'react'
 import toast from "react-hot-toast";
+import { useParams } from "react-router-dom";
 
 const CreatePost = () => {
   const imgRef = useRef(null)
@@ -10,6 +11,7 @@ const CreatePost = () => {
   const [text, setText] = useState("")
   const queryClient = useQueryClient()
   const { data: authUser, isLoading} = useQuery({queryKey: ['authUser']})
+  const { name: community } = useParams()
 
   const { mutate, isPending } = useMutation({
     mutationFn: async ({text, img}) => {
@@ -19,7 +21,7 @@ const CreatePost = () => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({text, img})
+            body: JSON.stringify({text, img, community: community || null})
         })
 
         const data = await res.json()
@@ -30,6 +32,7 @@ const CreatePost = () => {
         queryClient.invalidateQueries({queryKey: ['userProfile']})
         queryClient.invalidateQueries({queryKey: ['userPosts']})
         queryClient.invalidateQueries({queryKey: ['allPosts']})
+        queryClient.invalidateQueries({queryKey: ['communityPosts']})
 
         return data
 

@@ -2,13 +2,14 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React from 'react'
 import toast from 'react-hot-toast';
 import { GoDotFill } from "react-icons/go";
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 
 
 export const SingleCommunityCard = ({name, coverImg, fullname, location, followers, profileImg}) => {
     const { data: authUser, isLoading} = useQuery({queryKey: ['authUser']})
     const queryClient = useQueryClient()
+    const navigate = useNavigate()
 
     const { mutate: mutateFollowUnfollowCommunity, isPending } = useMutation({
         mutationFn: async () => {
@@ -22,6 +23,7 @@ export const SingleCommunityCard = ({name, coverImg, fullname, location, followe
 
                 queryClient.invalidateQueries({queryKey: ['authUser']})
                 queryClient.invalidateQueries({queryKey: ['communities']})
+                queryClient.invalidateQueries({queryKey: ['communityProfile']})
 
                 return data
             } catch (error) {
@@ -37,7 +39,7 @@ export const SingleCommunityCard = ({name, coverImg, fullname, location, followe
                 <img src={coverImg} alt='coverimg' className='min-w-full min-h-full'/>
             </div>
             <div className='p-6 pt-4 montserrat-my'>
-                <div className='flex items-center gap-2'>
+                <div onClick={() => navigate(`/communities/${name}`)} className='flex items-center gap-2 cursor-pointer'>
                     <div className="avatar">
                         <div className="w-12 rounded-xl">
                             <img src={profileImg} />

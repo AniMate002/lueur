@@ -15,6 +15,7 @@ import NotFoundPage from './pages/notfound/NotFoundPage'
 import NotificationsPage from './pages/notifications/NotificationsPage'
 import UpdateProfilePage from './pages/updateprofile/UpdateProfilePage'
 import CommunitiesPage from './pages/communities/CommunitiesPage'
+import CommunityPage from './pages/community/CommunityPage'
 
 function App() {
 
@@ -66,6 +67,7 @@ function App() {
           <Route path='/notifications' element={authUser ? <NotificationsPage /> : <LogInPage />}/>
           <Route path='/profile/:username/update' element={authUser ? <UpdateProfilePage /> : <LogInPage />}/>
           <Route path='/communities' element={authUser ? <CommunitiesPage /> : <LogInPage />}/>
+          <Route path='/communities/:name' element={authUser ? <CommunityPage /> : <LogInPage />}/>
         </Routes>
       {authUser ? <RightSideBar /> : ""}
 

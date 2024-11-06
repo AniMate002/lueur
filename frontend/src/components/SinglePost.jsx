@@ -9,7 +9,7 @@ import { FaHeart } from "react-icons/fa6";
 import SingleComment from './SingleComment';
 import { useNavigate } from 'react-router-dom';
 
-const SinglePost = ({comments, createdAt, likes, user, text, _id, img}) => {
+const SinglePost = ({comments, createdAt, likes, user, text, _id, img, community}) => {
     const navigate = useNavigate()
     const [comment, setComment] = useState("")
     const { data:authUser, isLoading } = useQuery({queryKey: ['authUser']})
@@ -35,6 +35,8 @@ const SinglePost = ({comments, createdAt, likes, user, text, _id, img}) => {
                 queryClient.invalidateQueries({queryKey: ['allPosts']})
                 queryClient.invalidateQueries({queryKey: ['followingPosts']})
                 queryClient.invalidateQueries({queryKey: ['notifications']})
+                queryClient.invalidateQueries({queryKey: ['communityPosts']})
+
 
 
                 return data
@@ -68,6 +70,7 @@ const SinglePost = ({comments, createdAt, likes, user, text, _id, img}) => {
                 queryClient.invalidateQueries({queryKey: ['userPosts']})
                 queryClient.invalidateQueries({queryKey: ['allPosts']})
                 queryClient.invalidateQueries({queryKey: ['followingPosts']})
+                queryClient.invalidateQueries({queryKey: ['communityPosts']})
 
                 setComment("")
                 return data
@@ -95,13 +98,13 @@ const SinglePost = ({comments, createdAt, likes, user, text, _id, img}) => {
   return (
     <div className='bg-[rgb(28,28,37)] mt-6 rounded-xl'>
         <div className='flex items-center gap-4 p-6 pb-0'>
-            <div onClick={() => navigate(`/profile/${user.username}`)} className="avatar cursor-pointer">
-                <div className="w-16 rounded-full">
-                    <img src={user.profileImg} />
+            <div onClick={() => navigate(community ? `/communities/${community.name}` : `/profile/${user.username}`)} className="avatar cursor-pointer">
+                <div className={`w-16 ${community ? " rounded-xl" : "rounded-full"}`}>
+                    <img src={community ? community.profileImg : user.profileImg} />
                 </div>
             </div>
-            <div onClick={() => navigate(`/profile/${user.username}`)} className='cursor-pointer'>
-                <p className='text-slate-300'>{user.fullname}</p>
+            <div onClick={() => navigate(community ? `/communities/${community.name}` : `/profile/${user.username}`)} className='cursor-pointer'>
+                <p className='text-slate-300'>{community ? community.name : user.fullname}</p>
                 <p className='text-sm text-slate-400'>{(new Date(createdAt).toLocaleDateString())}</p>
             </div>
             <IoIosMenu size={24} className='ml-auto text-slate-400'/>
@@ -110,12 +113,12 @@ const SinglePost = ({comments, createdAt, likes, user, text, _id, img}) => {
         
         {
             img ? 
-            <img src={img} alt='image' className='max-h-[500px] max-w-[70%] block mx-auto rounded-xl shadow-slate-800 shadow-xl'/>
+            <img src={img} alt='image' className='max-h-[500px] max-w-[70%] block mx-auto rounded-xl shadow-slate-800 shadow-xl mb-8'/>
             : 
             ""
         }
 
-        <div className='divider my-0 px-6 mt-6'></div>
+        {/* <div className='divider my-0 px-6 mt-6'></div>   */}
 
 
         {/* BOTTOM POST MENU */}
@@ -140,7 +143,7 @@ const SinglePost = ({comments, createdAt, likes, user, text, _id, img}) => {
         {renderedComments}
 
         {/* COMMENT INPUT */}
-        <div className='flex items-center w-full gap-2 px-6 pb-2'>
+        <div className='flex items-center w-full gap-2 px-6 pb-4'>
             <div className="avatar">
                 <div className="w-12 rounded-full">
                     <img src={authUser.profileImg} />

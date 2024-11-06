@@ -1,6 +1,7 @@
 import { Notification } from "../models/notification.model.js"
 import { Post } from "../models/post.model.js"
 import { User } from "../models/user.model.js"
+import { Community } from '../models/community.model.js'
 import { v2 as cloudinary } from "cloudinary"
 
 export const createPost = async (req, res) => {
@@ -13,7 +14,13 @@ export const createPost = async (req, res) => {
 
         if(!text && !img) return res.status(400).json({error: "Provide text or image"})
 
+            
         const newPost = new Post()
+        if(community){
+            const communityFetched = await Community.findOne({name: community})
+            if(!communityFetched) return res.status(404).json({error: "Community not found"})
+            newPost.community = communityFetched._id
+        }
         // newPost.img = img || ""
         if(img){
             const res = await cloudinary.uploader.upload(img)
@@ -24,7 +31,7 @@ export const createPost = async (req, res) => {
         newPost.likes = []
         newPost.comments = []
         newPost.user = user._id
-        newPost.community = community
+        // newPost.community = community
         
         await newPost.save()
 
@@ -243,5 +250,36 @@ export const getUserPosts = async (req, res) => {
     } catch (e) {
         console.log("Error in getUserPosts controller: ", e.message)
         return res.status(500).json({error: "Internal server error in fetching user posts"})
+    }
+}
+
+
+export const getCommunityPosts = async (req, res) => {
+    try {
+        const { name } = req.params
+        
+        const community = await Community.findOne({name})
+        if(!community) return res.status(404).json({error: "Community not found"})
+
+        const communityPosts = await Post.find({community: community._id})
+        .sort({createdAt: -1})
+        .populate({
+            path: 'community'
+        })
+        .populate({
+            path: "user"
+        })
+        .populate({
+            path: "comments.user"
+        })
+
+        if(communityPosts.length === 0) return res.status(200).json([])
+
+
+        return res.status(200).json(communityPosts)
+
+    } catch (e) {
+        console.log("Error in getCommunityPosts controller: ", e.message)
+        return res.status(500).json({error: "Internal server error in fetching community posts"})
     }
 }
