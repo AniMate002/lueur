@@ -51,14 +51,19 @@ const CommunityHeader = () => {
                         <div className='flex items-center gap-4'>
                             <p className='text-2xl text-white font-bold tracking-wider'>{communityProfile.name}</p>
                         </div>
-                        <button onClick={mutateFollowUnfollowCommunity} className={`text-sm  px-6 py-2 rounded-xl border-2 border-blue-500 ${communityProfile.followers.some(user => user._id.toString() === authUser._id.toString()) ? " bg-[rgb(40,41,50)]" : " bg-blue-500 "}`}>
-                            {
-                                communityProfile.followers.some(user => user._id.toString() === authUser._id.toString()) ?
-                                "Unfollow"
-                                :
-                                "Follow"
-                            }
-                        </button>
+                        {
+                            communityProfile.admins.some(admin => admin._id.toString() === authUser._id.toString()) ?
+                            <button className="text-sm  px-6 py-2 rounded-xl bg-blue-500">Update</button>
+                            :
+                            <button onClick={mutateFollowUnfollowCommunity} className={`text-sm  px-6 py-2 rounded-xl border-2 border-blue-500 ${communityProfile.followers.some(user => user._id.toString() === authUser._id.toString()) ? " bg-[rgb(40,41,50)]" : " bg-blue-500 "}`}>
+                                {
+                                    communityProfile.followers.some(user => user._id.toString() === authUser._id.toString()) ?
+                                    "Unfollow"
+                                    :
+                                    "Follow"
+                                }
+                            </button>
+                        }
                     </div>
 
                     <div className='flex items-center gap-14 w-full text-sm mt-4 text-slate-500'>

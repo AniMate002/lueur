@@ -10,11 +10,11 @@ const CommunityRightSection = () => {
     const { data: communityPosts, isLoading: isLoadingCommunityPosts } = useQuery({queryKey: ['communityPosts']})
 
     if(isLoading || isLoadingCommunityPosts){
-        return <h3>RigthSection Loading</h3>
+        return <span className="loading loading-ring loading-lg block mx-auto mt-[10vh]"></span>
     }
 
 
-    const renderedCommunityPosts = communityPosts.map(post => <SinglePost key={post._id} {...post}/>)
+    const renderedCommunityPosts = communityPosts?.map(post => <SinglePost key={post._id} {...post}/>)
 
     return (
         <div className='grow '>
@@ -23,7 +23,12 @@ const CommunityRightSection = () => {
                 <p className='text-sm text-slate-500 mt-4'>{communityProfile.about}</p>
             </div>
             <CreatePost />
-            {renderedCommunityPosts}
+            {
+                renderedCommunityPosts.length === 0 ? 
+                <h3 className='my-6 w-full block text-center text-slate-500'>This community does not have posts yet</h3>
+                :
+                renderedCommunityPosts
+            }
         </div>
     )
 }

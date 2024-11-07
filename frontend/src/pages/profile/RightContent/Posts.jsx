@@ -16,7 +16,7 @@ const Posts = () => {
     if(userPosts.length === 0){
         return <div className='w-full text-center mt-20 text-3xl text-slate-500'>This user does not have posts</div>
     }
-    const renderedPosts = userPosts?.map(post => <SinglePost {...post} key={post._id}/>)
+    const renderedPosts = userPosts?.filter(post => !post.community).map(post => <SinglePost {...post} key={post._id}/>)
     return (
         <div>
             {renderedPosts}

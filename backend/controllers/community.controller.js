@@ -1,11 +1,12 @@
 import { Community } from "../models/community.model.js"
 import { User } from "../models/user.model.js"
-
+import { v2 as cloudinary } from "cloudinary"
 
 
 export const createCommunity = async (req, res) => {
     try {
-        const { name, fullname } = req.body
+        const { name, fullname, industry, type, size, headqurters, location, about } = req.body
+        let { profileImg, coverImg } = req.body
         const user_id = req.user._id
 
         const user = await User.findById(req.user._id)
@@ -16,9 +17,27 @@ export const createCommunity = async (req, res) => {
         
         const newCommunity = new Community()
         
+        if(profileImg){
+            const res = await cloudinary.uploader.upload(profileImg)
+            profileImg = res.secure_url
+            newCommunity.profileImg = profileImg
+        }
+
+        if(coverImg){
+            const res = await cloudinary.uploader.upload(coverImg)
+            coverImg = res.secure_url
+            newCommunity.coverImg = coverImg
+        }
+
         newCommunity.name = name
         newCommunity.fullname = fullname
         newCommunity.admins = [user._id]
+        newCommunity.industry = industry
+        newCommunity.type = type
+        newCommunity.companySize = size
+        newCommunity.headqurters = headqurters
+        newCommunity.location = location
+        newCommunity.about = about
 
         await newCommunity.save()
         return res.status(201).json(newCommunity)
@@ -74,6 +93,7 @@ export const getAllCommunities = async (req, res) => {
 
 
         return res.status(200).json(communities)
+
 
     }catch(e){
         console.log("Error in getAllCommunities controller: ", e.message)
