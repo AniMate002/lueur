@@ -31,7 +31,7 @@ const CommunityLeftSection = () => {
             <div className='rounded-xl bg-[#1C1C25] w-full mt-4 pb-4'>
                 <p className='p-6 text-slate-300'>Followers</p>
                 <div className='divider mt-[-10px]'></div>
-                <div className='flex items-center justify-between flex-wrap px-5 gap-2'>
+                <div className='flex items-center flex-wrap px-5 gap-2'>
                     { renderedFollowers }
                 </div>
             </div>

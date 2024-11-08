@@ -12,6 +12,5 @@ router.post('/:name/follow', protectRoute, followUnfollowCommunity)
 // router.delete('/:name', protectRoute, deleteCommunity)
 router.get('/:name', protectRoute, getCommunity)
 router.get('/', protectRoute, getAllCommunities)
-// router.get('/following', protectRoute, getFollowingCommunities)
 
 export default router

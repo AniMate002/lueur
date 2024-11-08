@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-const CommunitiesHeader = () => {
+const CommunitiesHeader = ({searchQuery, setSearchQuery}) => {
     const { isLoading } = useQuery({ queryKey: ['communities']})
     const navigate = useNavigate()
     return (
@@ -17,7 +17,7 @@ const CommunitiesHeader = () => {
             {/* SORT SECTION */}
             <div className='flex items-center gap-6'>
                 <div className="input w-[400px] input-bordered flex items-center gap-2 focus-within:outline-none border-none bg-[rgb(28,28,37)] text-slate-300">
-                    <input type="text" className="grow" placeholder={"Search Communities"} />
+                    <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} type="text" className="grow" placeholder={"Search Communities"} />
                     <CiSearch className='text-slate-500' size={20} />
                 </div>
 

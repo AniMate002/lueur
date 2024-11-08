@@ -80,6 +80,9 @@ export const getMe = async (req, res) => {
         .populate({
             path: 'following'
         })
+        .populate({
+            path: "communities"
+        })
         res.status(200).json(user)
     }catch(e){
         console.log("Error in getMe controller: ", e.message)

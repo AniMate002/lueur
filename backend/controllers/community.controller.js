@@ -71,7 +71,7 @@ export const getCommunity = async (req, res) => {
         return res.status(200).json(foundCommunity)
 
     } catch (error) {
-        console.log("Error in getCommunity controller: ", e.message)
+        console.log("Error in getCommunity controller: ", error.message)
         return res.status(500).json({error: "Error in fetching community"})
     }
 }
@@ -127,7 +127,7 @@ export const followUnfollowCommunity = async (req, res) => {
         }
 
     } catch (error) {
-        console.log("Error in followUnfollowCommunity controller: ", e.message)
+        console.log("Error in followUnfollowCommunity controller: ", error.message)
         return res.status(500).json({error: "Error in follow/unfollow community"})
     }
 }

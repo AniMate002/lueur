@@ -34,7 +34,7 @@ export const SingleCommunityCard = ({name, coverImg, fullname, location, followe
     })
 
     return (
-        <div className='h-[320px] bg-[rgb(28,28,37)] rounded-xl'>
+        <div className='h-[330px] bg-[rgb(28,28,37)] rounded-xl'>
             <div className='w-full flex items-center justify-center overflow-hidden rounded-t-xl h-[120px]'>
                 <img src={coverImg} alt='coverimg' className='min-w-full min-h-full'/>
             </div>
@@ -55,10 +55,18 @@ export const SingleCommunityCard = ({name, coverImg, fullname, location, followe
 
                 <div className="avatar-group -space-x-6 rtl:space-x-reverse mt-2">
                     {
-                        followers.slice(0, 5).map(follower => {
+                        followers.sort((a, b) => {
+                            if(a.createdAt > b.createdAt){
+                                return -1
+                            }
+                            if(a.createdAt < b.createdAt){
+                                return 1
+                            }
+                            return 0
+                        }).slice(0, 5).map(follower => {
                             return (
-                            <Link to={`/profile/${follower.username}`} className="avatar">
-                                <div className="w-8">
+                            <Link key={follower._id} to={`/profile/${follower.username}`} className="avatar">
+                                <div className="w-10">
                                 <img src={follower.profileImg} />
                                 </div>
                             </Link>
