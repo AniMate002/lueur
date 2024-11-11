@@ -6,6 +6,7 @@ import { TbTemplate } from "react-icons/tb";
 import { CiImageOn } from "react-icons/ci";
 import { PiScroll } from "react-icons/pi";
 import { PiBackpackLight } from "react-icons/pi";
+import { CiUser } from "react-icons/ci";
 
 const Menu = () => {
   return (
@@ -30,9 +31,9 @@ const Menu = () => {
             <span>Notifications</span>
         </NavLink>
 
-        <NavLink to={'/photos'} className={"flex items-center gap-6 text-md font-bold montserrat-my text-slate-300"}>
-            <CiImageOn size={35}/>
-            <span>Photos</span>
+        <NavLink to={'/users'} className={"flex items-center gap-6 text-md font-bold montserrat-my text-slate-300"}>
+            <CiUser  size={37}/>
+            <span>Users</span>
         </NavLink>
 
         <NavLink to={'/files'} className={"flex items-center gap-6 text-md font-bold montserrat-my text-slate-300"}>

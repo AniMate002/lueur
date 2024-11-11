@@ -50,7 +50,7 @@ const SingleFollowingCard = ({username, profileImg, fullname, bio, _id, coverImg
                     :
                     ""
                 }
-                <img src={coverImg ? coverImg : 'https://images.pexels.com/photos/2101187/pexels-photo-2101187.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'} alt="coverimg" />
+                <img onLoad={() => setCoverLoading(false)} src={coverImg ? coverImg : 'https://images.pexels.com/photos/2101187/pexels-photo-2101187.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'}/>
             </div>
             <div className='flex items-center gap-6 mx-6 mt-[-45px]'>
                 <div onClick={() => navigate(`/profile/${username}`)} className="avatar bg-blue-400 p-[2px] rounded-full cursor-pointer">

@@ -1,6 +1,7 @@
 import { IoSendOutline } from "react-icons/io5";
 import { RiImageAddLine } from "react-icons/ri";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { MdOutlineFolderDelete } from "react-icons/md";
 import React, { useRef, useState } from 'react'
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
@@ -67,7 +68,7 @@ const CreatePost = () => {
   }
 
   return (
-    <div className=' rounded-xl bg-[rgb(28,28,37)] montserrat-my'>
+    <div className={` rounded-xl bg-[rgb(28,28,37)] montserrat-my ${img ? "pb-2" : ""}`}>
       <div className='p-6  text-slate-300'>Post Something</div>
       <div className='divider mt-[-15px]'></div>
       <div className='flex items-center p-6 pt-0 gap-4 text-slate-300 w-full  '>
@@ -80,14 +81,21 @@ const CreatePost = () => {
           <input value={text} onChange={e => setText(e.target.value)} type="text" placeholder="What is on your mind?" className="input w-[600px] bg-[rgb(28,28,37)] active:bg-[rgb(28,28,37)] focus:bg-[rgb(28,28,37)] focus:outline-none focus:border-none" />
           <input type="file" accept="image/*" hidden ref={imgRef} onChange={handleImgChange} />
         </form>
-        <RiImageAddLine onClick={() => imgRef.current.click()} size={24} className="text-slate-500 hover:text-slate-300 cursor-pointer transition-all duration-150 ml-auto"/>
+        {
+          img ? 
+          <MdOutlineFolderDelete size={28} onClick={() => setImg(null)} className="text-red-500 hover:text-red-300 cursor-pointer transition-all duration-150 ml-auto"/>
+          :
+          <RiImageAddLine onClick={() => imgRef.current.click()} size={24} className="text-slate-500 hover:text-slate-300 cursor-pointer transition-all duration-150 ml-auto"/>
+        }
         <IoSendOutline onClick={handleSubmit} size={24} className="text-slate-500 hover:text-slate-300 cursor-pointer transition-all duration-150"/>
       </div>
         {
           !img ? 
           ""
           :
-          <img src={img}/>
+          <div className="max-w-[500px]  overflow-hidden rounded-xl flex items-center justify-center mx-auto mb-4">
+            <img src={img}/>
+          </div>
         }
     </div>
   )

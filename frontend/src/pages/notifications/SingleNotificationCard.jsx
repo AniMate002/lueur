@@ -1,16 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FaHeart } from "react-icons/fa";
 import { RiUserFollowFill } from "react-icons/ri";
 import { useNavigate } from 'react-router-dom';
 
 
 const SingleNotificationCard = ({from, type}) => {
+    const [avatarLoading, setAvatarLoading] = useState(true)
     const navigate = useNavigate()
     return (
         <div className='h-[400px] bg-[rgb(28,28,37)] rounded-xl flex items-center flex-col justify-center montserrat-my hover:outline-blue-500 outline outline-2 transition-all duration-150 outline-[rgb(18,19,26)] outline-offset-[5px]'>
             <div onClick={() => navigate(`/profile/${from.username}`)} className="avatar cursor-pointer">
-                <div className="w-36 rounded-full">
-                    <img src={from.profileImg} />
+                <div className="w-36 rounded-full bg-[rgb(40,41,50)]">
+                    <img onLoad={() => setAvatarLoading(false)} src={from.profileImg} className={`${avatarLoading ? "opacity-0" : "opacity-100"}`}/>
                 </div>
             </div>
             <p onClick={() => navigate(`/profile/${from.username}`)} className='mt-8 text-lg cursor-pointer'>{from.fullname}</p>

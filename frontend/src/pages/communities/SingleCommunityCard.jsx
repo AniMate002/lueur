@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import React from 'react'
+import React, { useState } from 'react'
 import toast from 'react-hot-toast';
 import { GoDotFill } from "react-icons/go";
 import { Link, useNavigate } from 'react-router-dom'
@@ -8,6 +8,7 @@ import { Link, useNavigate } from 'react-router-dom'
 
 export const SingleCommunityCard = ({name, coverImg, fullname, location, followers, profileImg}) => {
     const { data: authUser, isLoading} = useQuery({queryKey: ['authUser']})
+    const [coverLoading, setCoverLoading] = useState(true)
     const queryClient = useQueryClient()
     const navigate = useNavigate()
 
@@ -35,8 +36,14 @@ export const SingleCommunityCard = ({name, coverImg, fullname, location, followe
 
     return (
         <div className='h-[330px] bg-[rgb(28,28,37)] rounded-xl'>
-            <div className='w-full flex items-center justify-center overflow-hidden rounded-t-xl h-[120px]'>
-                <img src={coverImg} alt='coverimg' className='min-w-full min-h-full'/>
+            <div className='w-full flex items-center justify-center overflow-hidden rounded-t-xl h-[120px] bg-[rgb(40,41,50)]'>
+            {
+                coverLoading ? 
+                <span className="loading loading-ring loading-lg"></span>
+                :
+                ""
+            }
+                <img src={coverImg} onLoad={() => setCoverLoading(false)} className='min-w-full min-h-full'/>
             </div>
             <div className='p-6 pt-4 montserrat-my'>
                 <div onClick={() => navigate(`/communities/${name}`)} className='flex items-center gap-2 cursor-pointer'>

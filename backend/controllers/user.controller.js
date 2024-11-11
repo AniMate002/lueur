@@ -154,3 +154,23 @@ export const updateUser = async (req, res) => {
     }
 }
 
+
+
+export const getAllUsers = async (req, res) => {
+    try {
+        const userId = req.user._id
+
+        const user = await User.findById(userId)
+        if(!user) return res.status(404).json({error: "User not found"})
+        
+        const users = await User.find()
+
+        if(users.length === 0) return res.status(200).json([])
+
+        return res.status(200).json(users)
+
+    } catch (e) {
+        console.log("Error in updateUser: ", e.message)
+        return res.status(500).json({error: "Internal server error in updating user"})
+    }
+}

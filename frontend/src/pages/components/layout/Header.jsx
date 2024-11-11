@@ -4,11 +4,34 @@ import { IoPersonAddOutline } from "react-icons/io5";
 import { AiOutlineMessage } from "react-icons/ai";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { FaCaretDown } from "react-icons/fa";
-import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Link, useNavigate } from 'react-router-dom';
+import { IoLogOutOutline } from "react-icons/io5";
+import { toast } from "react-hot-toast"
+
 
 const Header = () => {
     const { data: authUser, isLoading } = useQuery({queryKey: ['authUser']})
+    const { data: notifications} = useQuery({queryKey: ['notifications']})
+    const navigate = useNavigate()
+    const { mutate: mutateLogout } = useMutation({
+        mutationFn: async () => {
+            const res = await fetch('/api/auth/logout', {
+                method: "POST",
+                body: ""
+            })
+
+            const data = await res.json()
+            if(data.error) throw new Error(data.error)
+            console.log("LOG_OUT: ", data)
+            navigate("/login")
+            return data
+        },
+        onError: (error) => {
+            console.log(error.message)
+            toast.error(error.message)
+        }
+    })
 
   return (
     <div className='w-full px-16 py-8 flex items-center justify-between bg-[rgb(28,28,37)] border-b-[1px] border-slate-800'>
@@ -18,18 +41,23 @@ const Header = () => {
             <CiSearch size={20}/>
         </label>
         <div className=' flex items-center gap-6'>
-            <IoPersonAddOutline size={23}/>
+            <IoLogOutOutline onClick={mutateLogout} className='rotate-180 cursor-pointer' size={23}/>
             <AiOutlineMessage size={23}/>
-            <IoIosNotificationsOutline size={23}/>
+            <Link to={'/notifications'} className='relative'>
+                {Array.isArray(notifications) && notifications.some(notification => !notification.read) && (
+                    <div className='absolute w-[10px] h-[10px] rounded-full bg-blue-500 top-0 right-0'></div>
+                )}
+                <IoIosNotificationsOutline size={23}/>
+            </Link>
             {
                 isLoading ? 
                 <div className='skeleton w-12 h-12 rounded-full'></div>
                 :
-                <div className="avatar">
+                <Link to={`/profile/${authUser.username}`} className="avatar">
                     <div className="w-12 rounded-full">
                         <img src={authUser.profileImg} />
                     </div>
-                </div>
+                </Link>
             }
             <FaCaretDown />
         </div>

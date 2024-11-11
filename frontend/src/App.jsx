@@ -17,6 +17,7 @@ import UpdateProfilePage from './pages/updateprofile/UpdateProfilePage'
 import CommunitiesPage from './pages/communities/CommunitiesPage'
 import CommunityPage from './pages/community/CommunityPage'
 import CreateCommunityPage from './pages/createcommunity/CreateCommunityPage'
+import UsersPage from './pages/users/UsersPage'
 
 function App() {
 
@@ -70,6 +71,7 @@ function App() {
           <Route path='/communities' element={authUser ? <CommunitiesPage /> : <LogInPage />}/>
           <Route path='/communities/:name' element={authUser ? <CommunityPage /> : <LogInPage />}/>
           <Route path='/communities/create' element={authUser ? <CreateCommunityPage /> : <LogInPage />} />
+          <Route path='/users' element={authUser ? <UsersPage /> : <LogInPage />} />
         </Routes>
       {authUser ? <RightSideBar /> : ""}
 
