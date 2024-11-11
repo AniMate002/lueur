@@ -51,7 +51,7 @@ const CommunitiesPage = () => {
     const renderedOwnedCommunities = ownedCommunities?.map(community => (
         <SingleCommunityCard key={community._id} {...community} />
     ));
-
+ 
     return (
         <div className='p-10 w-full scroll-smooth h-[89vh] scrollbar-thumb-slate-800 scrollbar-thin scrollbar-track-transparent overflow-y-scroll'>
             <CommunitiesHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} />

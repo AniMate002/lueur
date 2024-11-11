@@ -1,5 +1,4 @@
-
-import { IoLocationOutline } from "react-icons/io5";
+import { CiVoicemail } from "react-icons/ci";
 import { IoGlobeOutline } from "react-icons/io5";
 import { MdOutlineFormatQuote } from "react-icons/md";
 import { useQuery } from '@tanstack/react-query'
@@ -29,8 +28,8 @@ const AboutMe = () => {
 
         {/* LOCATION */}
         <div className="flex items-center gap-4 text-slate-400">
-            <IoLocationOutline size={25}/>
-            <p>Los-Angeles, USA</p>
+            <CiVoicemail size={25}/>
+            <p>{userProfile.email}</p>
         </div>
 
         {/* LINK */}

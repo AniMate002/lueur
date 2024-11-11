@@ -78,11 +78,14 @@ export const getMe = async (req, res) => {
     try{
         const user = await User.findById(req.user._id)
         .populate({
-            path: 'following'
-        })
-        .populate({
-            path: "communities"
-        })
+            path: 'communities',
+            populate: {
+              path: 'followers',
+              model: 'User'
+            }
+          })
+          .populate('following');
+
         res.status(200).json(user)
     }catch(e){
         console.log("Error in getMe controller: ", e.message)

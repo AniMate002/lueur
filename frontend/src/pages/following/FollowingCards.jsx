@@ -2,11 +2,11 @@ import { useQuery } from '@tanstack/react-query'
 import React, { useEffect, useState } from 'react'
 import SingleFollowingCard from './SingleFollowingCard'
 import { FaRegSadTear } from "react-icons/fa";
-
+import { SingleCommunityCard } from "../communities/SingleCommunityCard"
 
 
 const FollowingCards = ({ sortType, searchQuery }) => {
-    const [displayedFollowing, setDisplayedFollowing] = useState([]) // Combined state for sorted and filtered list
+    const [displayedFollowing, setDisplayedFollowing] = useState([])
     const { data: authUser, isLoading, isError } = useQuery({ queryKey: ['authUser'] })
 
     if (isLoading) {
@@ -68,13 +68,21 @@ const FollowingCards = ({ sortType, searchQuery }) => {
         <SingleFollowingCard key={user._id} {...user} />
     ))
 
-    if(displayedFollowing?.length === 0){
-        return <p className='text-slate-300 w-fit mx-auto text-center mt-56 text-4xl bg-[rgb(28,28,37)] px-10 py-16 rounded-xl'>No users found <FaRegSadTear className='inline' /></p>
+    const filteredCommunities = authUser.communities.filter(community => community.fullname.toLowerCase().includes(searchQuery.toLowerCase()) || community.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    const renderedCommunities = filteredCommunities.map(community => <SingleCommunityCard key={community._id} {...community}/>)
+
+    if(displayedFollowing?.length === 0 && filteredCommunities?.length === 0){
+        return <p className='text-slate-300 w-full mx-auto text-center mt-56 text-xl bg-[rgb(28,28,37)] px-10 py-16 rounded-xl'>Nothing was found <FaRegSadTear className='inline' /></p>
     }
 
     return (
-        <div className='grid grid-cols-2 gap-6 mt-8'>
-            {renderedFollowingCards}
+        <div>
+            <div className='grid grid-cols-2 gap-6 mt-8'>
+                {renderedFollowingCards}
+            </div>
+            <div className='grid grid-cols-4 gap-4 mt-8'>
+                { renderedCommunities }
+            </div>
         </div>
     )
 }
