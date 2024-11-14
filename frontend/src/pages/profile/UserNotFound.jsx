@@ -2,8 +2,8 @@ import React from 'react';
 
 export const UserNotFound = (props) => {
   return (
-    <div className='flex items-center justify-center m-10 rounded-xl bg-[rgb(28,28,37)] w-full'>
-        <p className='text-3xl text-slate-500'>{props.message}</p>
-    </div>
+    <p className='w-full mx-5 text-center block mt-[35vh] bg-[rgb(28,28,37)] rounded-xl h-fit py-6 text-slate-300'>
+      {props.message}
+    </p>
   );
 };

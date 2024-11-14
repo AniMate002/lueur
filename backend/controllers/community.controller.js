@@ -131,3 +131,36 @@ export const followUnfollowCommunity = async (req, res) => {
         return res.status(500).json({error: "Error in follow/unfollow community"})
     }
 }
+
+
+
+export const addCommunityAdmin = async (req, res) => {
+    try {
+        const {name, username} = req.body
+
+        const user_id = req.user._id
+
+
+        const user = await User.findById(user_id)
+        if(!user) return res.status(404).json({error: "User not found"})
+
+        let community = await Community.findOne({name})
+        if(!community) return res.status(404).json({error: "Community not found"})
+
+        if(!community.admins.includes(user_id.toString())) return res.status(400).json({error: "Only admins can do this"})
+            
+
+        const newAdmin = await User.findOne({username})
+        if(!newAdmin) return res.status(404).json({error: "User not found"})
+
+        if(community.admins.includes(newAdmin._id.toString())) return res.status(200).json({error: "This user is already an admin"})
+
+
+        community = await Community.findOneAndUpdate({name}, { $push: { admins: newAdmin._id}})
+
+        return res.status(200).json(community)
+    } catch (error) {
+        console.log("Error in followUnfollowCommunity controller: ", error.message)
+        return res.status(500).json({error: "Error in follow/unfollow community"})
+    }
+}
