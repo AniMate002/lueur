@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { FaHeart } from "react-icons/fa";
 import { RiUserFollowFill } from "react-icons/ri";
 import { useNavigate } from 'react-router-dom';
+import { LuShare2 } from "react-icons/lu";
 
 
 const SingleNotificationCard = ({from, type}) => {
@@ -21,14 +22,20 @@ const SingleNotificationCard = ({from, type}) => {
                     type === "like" ? 
                     "Liked your post"
                     :
+                    type === "follow" ? 
                     "Follows you"
+                    :
+                    "shared post with you"
                 }
             </p>
             {
                 type === "like" ?
                 <FaHeart className='text-red-600'/>
                 :
+                type === 'follow' ?
                 <RiUserFollowFill size={18} className='text-blue-500'/>
+                :
+                <LuShare2 size={18} className='text-green-500'/>
             }
         </div>
     )

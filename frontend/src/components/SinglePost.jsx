@@ -8,9 +8,13 @@ import toast from 'react-hot-toast';
 import { FaHeart } from "react-icons/fa6";
 import SingleComment from './SingleComment';
 import { useNavigate } from 'react-router-dom';
+import { LuShare2 } from "react-icons/lu";
+import SingleRepostUser from './SingleRepostUser';
 
 const SinglePost = ({comments, createdAt, likes, user, text, _id, img, community}) => {
+    const [selectedRepostUser, setSelectedRepostUser] = useState('')
     const navigate = useNavigate()
+    const [showComments, setShowComments] = useState(false)
     const [comment, setComment] = useState("")
     const { data:authUser, isLoading } = useQuery({queryKey: ['authUser']})
     const queryClient = useQueryClient()
@@ -82,6 +86,59 @@ const SinglePost = ({comments, createdAt, likes, user, text, _id, img, community
         }
     })
 
+
+    const { mutate: mutateDeletePost} = useMutation({
+        mutationFn: async () => {
+            try {
+                const res = await fetch(`/api/posts/${_id}`, {
+                    method: 'DELETE'
+                })
+                const data = await res.json()
+                if(data.error) throw new Error(data.error)
+                console.log("POST_DELETE: ", data)
+                toast.success(data.message)
+                queryClient.invalidateQueries({queryKey: ['authUser']})
+                queryClient.invalidateQueries({queryKey: ['userProfile']})
+                queryClient.invalidateQueries({queryKey: ['userPosts']})
+                queryClient.invalidateQueries({queryKey: ['allPosts']})
+                queryClient.invalidateQueries({queryKey: ['followingPosts']})
+                queryClient.invalidateQueries({queryKey: ['communityPosts']})
+                return data
+            } catch (error) {
+                console.log(error.message)
+                toast.error(error.message)
+            }
+        }
+    })
+
+    const { mutate: mutateRepost, isPending: isPendingRepost} = useMutation({
+        mutationFn: async () => {
+            try {
+                if(!selectedRepostUser) throw new Error("Select user")
+                const res = await fetch(`/api/posts/repost/${_id}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({id: selectedRepostUser})
+                })
+
+                const data = await res.json()
+                if(data.error) throw new Error(data.error)
+                console.log("REPOST_SHARE: ", data)
+                return data
+            } catch (error) {
+                console.log(error.message)
+                toast.error(error.message)
+            }
+        },
+        onSuccess: () => {
+            setSelectedRepostUser('')
+            document.getElementById('my_modal_repost').close()
+            toast.success("Post shared")
+        }
+    })
+
     const handleLike = () => {
         mutate()
     }
@@ -94,68 +151,115 @@ const SinglePost = ({comments, createdAt, likes, user, text, _id, img, community
 
 
     const renderedComments = comments?.map(comment => <SingleComment {...comment} key={comment?._id}/>)
+    const renderedRepostUsers = authUser.following.map(user => <SingleRepostUser selectedRepostUser={selectedRepostUser} setSelectedRepostUser={setSelectedRepostUser} key={user._id} {...user}/>)
 
-  return (
-    <div className='bg-[rgb(28,28,37)] mt-6 rounded-xl'>
-        <div className='flex items-center gap-4 p-6 pb-0'>
-            <div onClick={() => navigate(community ? `/communities/${community.name}` : `/profile/${user.username}`)} className="avatar cursor-pointer">
-                <div className={`w-16 ${community ? " rounded-xl" : "rounded-full"}`}>
-                    <img src={community ? community.profileImg : user.profileImg} />
+    return (
+        <div className='bg-[rgb(28,28,37)] mt-6 rounded-xl'>
+            <div className='flex items-center gap-4 p-6 pb-0'>
+                <div onClick={() => navigate(community ? `/communities/${community.name}` : `/profile/${user.username}`)} className="avatar cursor-pointer">
+                    <div className={`w-16 ${community ? " rounded-xl" : "rounded-full"}`}>
+                        <img src={community ? community.profileImg : user.profileImg} />
+                    </div>
+                </div>
+                <div onClick={() => navigate(community ? `/communities/${community.name}` : `/profile/${user.username}`)} className='cursor-pointer'>
+                    <p className='text-slate-300'>{community ? community.name : user.fullname}</p>
+                    <p className='text-sm text-slate-400'>{(new Date(createdAt).toLocaleDateString())}</p>
+                </div>
+                <div className="dropdown ml-auto dropdown-end">
+                    <div tabIndex={0} role="button" className="btn m-1 bg-[rgb(28,28,37)] border-none hover:bg-[rgb(50,50,61)]">
+                        <IoIosMenu size={24} className='ml-auto text-slate-400'/>
+                    </div>
+                    <ul tabIndex={0} className="dropdown-content menu  rounded-box z-[1000] w-52 p-2 shadow bg-[rgb(40,41,50)]">
+                        <li onClick={mutateDeletePost}><a>Delete post</a></li>
+                    </ul>
                 </div>
             </div>
-            <div onClick={() => navigate(community ? `/communities/${community.name}` : `/profile/${user.username}`)} className='cursor-pointer'>
-                <p className='text-slate-300'>{community ? community.name : user.fullname}</p>
-                <p className='text-sm text-slate-400'>{(new Date(createdAt).toLocaleDateString())}</p>
+            <p className='mt-6  text-slate-500 px-6 open-sans-my'>{text}</p>
+            
+            {
+                img ? 
+                <img src={img} alt='image' className='max-h-[500px] mx-auto max-w-[95%] mt-4 block rounded-xl   mb-8'/>
+                : 
+                ""
+            }
+
+            {/* <div className='divider my-0 px-6 mt-6'></div>   */}
+
+
+            {/* BOTTOM POST MENU */}
+            <div className='flex items-center w-full px-6 justify-start gap-4 mt-6 pb-6'>
+                <button onClick={() => setShowComments(prev => !prev)} className='flex items-center gap-2 text-slate-500 bg-[rgb(40,41,50)] w-[80px] h-[40px] justify-center rounded-xl'>
+                    <FaRegComment size={23}/>
+                    <p>{comments.length}</p>
+                </button>
+                <button onClick={handleLike} className='flex items-center gap-2 text-slate-500 bg-[rgb(40,41,50)] w-[60px] h-[40px] justify-center rounded-xl'>
+                    {
+                        authUser.likedPosts.includes(_id.toString()) ?
+                        <FaHeart  className='text-red-600 cursor-pointer'/>
+                        :
+                        <FaRegHeart  className={`hover:text-slate-300 cursor-pointer`}/>
+                    }
+                    <p>{likes.length}</p>
+                </button>
+                <button onClick={()=>document.getElementById('my_modal_repost').showModal()} className='flex items-center gap-2 text-slate-500 bg-[rgb(40,41,50)] w-[60px] h-[40px] justify-center rounded-xl'>
+                    <LuShare2 size={19}/>
+                </button>
             </div>
-            <IoIosMenu size={24} className='ml-auto text-slate-400'/>
-        </div>
-        <p className='mt-6 text-sm text-slate-500 px-6 open-sans-my'>{text}</p>
-        
-        {
-            img ? 
-            <img src={img} alt='image' className='max-h-[500px] max-w-[70%] block mx-auto rounded-xl shadow-slate-800 shadow-xl mb-8'/>
-            : 
-            ""
-        }
-
-        {/* <div className='divider my-0 px-6 mt-6'></div>   */}
+            {
+                showComments ?
+                <div className='divider mt-0'></div>
+                :
+                ""
+            }
 
 
-        {/* BOTTOM POST MENU */}
-        <div className='flex items-center w-full px-6 justify-center gap-8 mt-2'>
-            <div className='flex items-center gap-4 text-slate-500'>
-                <FaRegComment size={23}/>
-                <p>{comments.length} Comments</p>
-            </div>
-            <div className='flex items-center gap-4 text-slate-500'>
-                {
-                    authUser.likedPosts.includes(_id.toString()) ?
-                    <FaHeart onClick={handleLike} className='text-red-600 cursor-pointer'/>
-                    :
-                    <FaRegHeart onClick={handleLike} size={23} className={`hover:text-slate-300 cursor-pointer`}/>
-                }
-                <p>{likes.length} Likes</p>
-            </div>
-        </div>
-        <div className='divider mt-2'></div>
+            {
+                showComments ? 
+                renderedComments
+                :
+                ""
+            }
 
-
-        {renderedComments}
-
-        {/* COMMENT INPUT */}
-        <div className='flex items-center w-full gap-2 px-6 pb-4'>
-            <div className="avatar">
-                <div className="w-12 rounded-full">
-                    <img src={authUser.profileImg} />
+            {/* COMMENT INPUT */}
+            <div className={`${showComments ? "flex" : "hidden"} items-center w-full gap-2 px-6 pb-4`}>
+                <div className="avatar">
+                    <div className="w-12 rounded-full">
+                        <img src={authUser.profileImg} />
+                    </div>
                 </div>
+                <form onSubmit={handleComment} className="input flex-grow input-bordered flex items-center gap-2 text-slate-300 bg-[rgb(40,41,50)] focus-within:outline-none border-none">
+                    <input value={comment} onChange={e => setComment(e.target.value)} type="text" className="grow focus:border-none focus:outline-none" placeholder="Write your comment..." />
+                    <button type='submit'><IoSendOutline className='text-slate-400' size={20}/></button>
+                </form>
             </div>
-            <form onSubmit={handleComment} className="input flex-grow input-bordered flex items-center gap-2 text-slate-300 bg-[rgb(40,41,50)] focus-within:outline-none border-none">
-                <input value={comment} onChange={e => setComment(e.target.value)} type="text" className="grow focus:border-none focus:outline-none" placeholder="Write your comment..." />
-                <button type='submit'><IoSendOutline className='text-slate-400' size={20}/></button>
-            </form>
+
+
+
+            {/* MODAL WINDOW REPOST */}
+            <dialog id="my_modal_repost" className="modal">
+                <div className="modal-box bg-[rgb(28,28,37)] text-slate-300 !w-[1000px]">
+                    <h3 className="font-bold text-lg">Share post with following users</h3>
+                    <div className='flex items-center justify-center flex-wrap mt-8 gap-4 max-h-[500px] overflow-y-auto'>
+                        { renderedRepostUsers }
+                    </div>
+                    <div className='flex items-center justify-center gap-4 mt-4'>
+                        <button onClick={mutateRepost} disabled={!selectedRepostUser || isPendingRepost} className='bg-blue-500 disabled:bg-blue-400 disabled:cursor-not-allowed text-white block w-[120px] h-[40px] rounded-xl'>
+                            {
+                                isPendingRepost?
+                                <span className="loading loading-ring loading-md"></span>
+                                :
+                                "Share"
+                            }
+                        </button>
+                        <button onClick={()=>document.getElementById('my_modal_repost').close()} className='bg-[rgb(40,41,50)] text-white block w-[120px] h-[40px] rounded-xl'>Close</button>
+                    </div>
+                </div>
+                <form method="dialog" className="modal-backdrop">
+                    <button>close</button>
+                </form>
+            </dialog>
         </div>
-    </div>
-  )
+    )
 }
 
 export default SinglePost

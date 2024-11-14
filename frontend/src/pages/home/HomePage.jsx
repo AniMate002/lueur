@@ -6,7 +6,7 @@ import RightContent from './RightContent/RightContent'
 
 const HomePage = () => {
   return (
-    <div className='px-10 pt-10 w-full scroll-smooth h-[89vh] scrollbar-thumb-slate-800 scrollbar-thin scrollbar-track-transparent overflow-y-scroll'>
+    <div className='p-10 w-full scroll-smooth h-[89vh] scrollbar-thumb-slate-800 scrollbar-thin scrollbar-track-transparent overflow-y-scroll'>
       <div className='w-full flex gap-10'>
         <LeftContent />
         <RightContent />

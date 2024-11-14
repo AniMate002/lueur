@@ -13,22 +13,25 @@ const SingleNotificationSideBar = ({type, from, read}) => {
                     <img src={from.profileImg} alt='avatar' />
                 </div>
             </div>
-            <div>
-                <p className={`text-sm ${read ? "text-slate-500" : "text-blue-400"} montserrat-my`}>{from.fullname}</p>
+            <div className='w-[120px] overflow-hidden'>
+                <p className={`text-sm ${read ? "text-slate-500" : "text-blue-400"} montserrat-my overflow-ellipsis`}>{from.fullname}</p>
                 <p className='text-slate-500 text-sm montserrat-my'>
                     {
                         type === "like" ? 
                         "Liked your post"
                         :
+                        type === "follow" ? 
                         "Follows you"
+                        :
+                        "Shared post"
                     }
                 </p>
             </div>
             {
                 read ? 
-                <GoDot className='text-slate-400'/>
+                <GoDot className='text-slate-400 ml-auto'/>
                 :
-                <GoDotFill className='text-blue-400'/>
+                <GoDotFill className='text-blue-400 ml-auto'/>
             }
         </div>
   )

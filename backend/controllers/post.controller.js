@@ -53,7 +53,7 @@ export const deletePost = async (req, res) => {
         if(!post) return res.status(404).json({error: "Post not found"})
 
         if(post.user.toString() !== user._id.toString()){
-            return res.status(404).json({error: "You can not delete this post"})
+            return res.status(404).json({error: "You are not the author of this post to delete it"})
         }
 
         if(post.img){
@@ -278,6 +278,37 @@ export const getCommunityPosts = async (req, res) => {
 
         return res.status(200).json(communityPosts)
 
+    } catch (e) {
+        console.log("Error in getCommunityPosts controller: ", e.message)
+        return res.status(500).json({error: "Internal server error in fetching community posts"})
+    }
+}
+
+
+
+export const repostPost = async (req, res) => {
+    try {
+        const { id } = req.params
+        const receiver_id = req.body.id
+        const user_id = req.user._id
+
+        const user = await User.findById(user_id)
+        if(!user) return res.status(404).json({error: "User not found"})
+
+        const receiver = await User.findById(receiver_id)
+        if(!receiver) return res.status(404).json({error: "User was not found"})
+
+        const post = await Post.findById(id)
+        if(!post) return res.status(404).json({error: "Post not found"})
+
+        const newNotifications = new Notification()
+        newNotifications.from = user_id
+        newNotifications.to = receiver_id
+        newNotifications.type = 'repost'
+        newNotifications.target = post._id
+        await newNotifications.save()
+        
+        return res.status(200).json(newNotifications)
     } catch (e) {
         console.log("Error in getCommunityPosts controller: ", e.message)
         return res.status(500).json({error: "Internal server error in fetching community posts"})

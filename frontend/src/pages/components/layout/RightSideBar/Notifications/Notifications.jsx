@@ -5,7 +5,7 @@ import SingleNotificationSideBar from './SingleNotificationSideBar'
 import { Link } from 'react-router-dom'
 
 const Notifications = () => {
-    const { data: notifications, isLoading, isError, error } = useQuery({
+    const { data: notifications, isLoading, isError, error, isPending } = useQuery({
         queryKey: ['notifications'],
         queryFn: async () => {
             try {
@@ -18,15 +18,15 @@ const Notifications = () => {
                 console.log(error.message)
                 toast.error(error.message)
             }
-        }
+        },
     })
 
     if(isError){
         return <h3>{error}</h3>
     }
 
-    if(isLoading){
-        return <div className='skeleton w-full rounded-xl h-[100px]'></div>
+    if(isLoading || isPending){
+        return <div className='skeleton rounded-xl h-[100px] mt-8 mx-auto w-[80%]'></div>
 
     }
 
@@ -38,7 +38,7 @@ const Notifications = () => {
             <p className='uppercase text-sm text-slate-400 ml-6 mt-8 tracking-widest montserrat-my '>notifications</p>
             <div className='flex flex-col gap-4 w-full mt-8'>
                 {
-                    notifications.length === 0 ? 
+                    notifications?.length === 0 ? 
                     <p className='ml-6 text-sm text-slate-500'>No notifications</p>
                     :
                     renderedNotifications
