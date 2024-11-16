@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 
 
 const MiniProfile = () => {
+  const [avatarLoading, setAvatarLoading] = useState(true)
   const navigate = useNavigate()
     const { data: authUser, isLoading } = useQuery({queryKey: ['authUser']})
 
@@ -24,9 +25,9 @@ const MiniProfile = () => {
 
   return (
     <div onClick={() => navigate(`/profile/${authUser.username}`)} className='border-[1px] border-slate-600 bg-[rgb(40,41,50)] px-2 py-4 rounded-xl flex items-center gap-3 w-full mt-4 cursor-pointer hover:underline'>
-        <div className="avatar">
-            <div className="w-10 rounded-full">
-                <img src={authUser.profileImg} />
+        <div className="avatar ">
+            <div className="w-10 rounded-full bg-[rgb(28,28,37)]">
+                <img onLoad={() => setAvatarLoading(false)} src={authUser.profileImg} className={`${avatarLoading ? "opacity-0" : "opacity-[1]"}`}/>
             </div>
         </div>
         <div>

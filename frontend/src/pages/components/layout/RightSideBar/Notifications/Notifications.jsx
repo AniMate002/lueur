@@ -5,31 +5,49 @@ import SingleNotificationSideBar from './SingleNotificationSideBar'
 import { Link } from 'react-router-dom'
 
 const Notifications = () => {
-    const { data: notifications, isLoading, isError, error, isPending } = useQuery({
+    // const { data: notifications, isLoading, isError, error, isPending } = useQuery({
+    //     queryKey: ['notifications'],
+    //     queryFn: async () => {
+    //         try {
+    //             const res = await fetch('/api/notifications')
+    //             const data = await res.json()
+    //             if(data.error) throw new Error(data.error)
+    //             console.log("NOTIFICATIONS: ", data)
+    //             return data
+    //         } catch (error) {
+    //             console.log(error.message)
+    //             toast.error(error.message)
+    //         }
+    //     },
+    // })
+
+    
+    
+    const { data: notifications, isLoading, error, isError, isPending } = useQuery({
         queryKey: ['notifications'],
         queryFn: async () => {
             try {
                 const res = await fetch('/api/notifications')
                 const data = await res.json()
                 if(data.error) throw new Error(data.error)
-                console.log("NOTIFICATIONS: ", data)
+                console.log("NOTIFICAIONTS: ", data)
                 return data
             } catch (error) {
                 console.log(error.message)
                 toast.error(error.message)
             }
-        },
+        }
     })
 
+    
     if(isError){
-        return <h3>{error}</h3>
+        return <h3>{error.message}</h3>
     }
 
     if(isLoading || isPending){
         return <div className='skeleton rounded-xl h-[100px] mt-8 mx-auto w-[80%]'></div>
 
     }
-
 
     const renderedNotifications = notifications?.slice(0, 5).map(notification => <SingleNotificationSideBar {...notification} key={notification._id}/>)
 

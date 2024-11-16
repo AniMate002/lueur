@@ -34,6 +34,10 @@ export const followUnfollowUser = async (req, res) => {
             // UNFOLLOW
             await User.findByIdAndUpdate(id, { $pull: {followers: req.user._id}})
             await User.findByIdAndUpdate(req.user._id, { $pull: { following: id } })
+            if(userToModify.notify.includes(req.user._id.toString())){
+                console.log(userToModify.notify[0])
+                await User.findByIdAndUpdate(id, { $pull: { notify: req.user._id } })
+            }
             
             return res.status(200).json({message: "User unfollowed successfully"})
         }else{
@@ -170,7 +174,37 @@ export const getAllUsers = async (req, res) => {
         return res.status(200).json(users)
 
     } catch (e) {
-        console.log("Error in updateUser: ", e.message)
-        return res.status(500).json({error: "Internal server error in updating user"})
+        console.log("Error in getAllUsers: ", e.message)
+        return res.status(500).json({error: "Internal server error in fetching all user"})
+    }
+}
+
+
+
+export const notifyMe = async (req, res) => {
+    try {
+        const username = req.params.username
+        const my_id = req.user._id
+
+        const me = await User.findById(my_id)
+        if(!me) return res.status(404).json({error: "User not found"})
+
+        const user = await User.findOne({username})
+        if(!user) return res.status(404).json({error: "User not found"})
+
+        const alreadyNotify = user.notify.includes(my_id)
+        if(alreadyNotify){
+            // DELETE NOTIFY ABOUT NEW POSTS
+            await User.findOneAndUpdate({username}, { $pull: { notify: my_id } })
+            return res.status(200).json({message: "You will not be notified about new posts anymore"})
+        }else{
+            // NOTIFY ABOUT NEW POSTS
+            await User.findOneAndUpdate({username}, { $push: { notify: my_id } })
+            return res.status(200).json({message: "You will be notified about new posts"})
+        }
+        
+    } catch (e) {
+        console.log("Error in notifyMe: ", e.message)
+        return res.status(500).json({error: "Internal server error in subsription to notifying"})
     }
 }

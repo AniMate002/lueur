@@ -11,6 +11,7 @@ const CreatePost = () => {
   const [img, setImg] = useState(null)
   const [text, setText] = useState("")
   const queryClient = useQueryClient()
+  const [avatarLoading, setAvatarLoading] = useState(true)
   const { data: authUser, isLoading} = useQuery({queryKey: ['authUser']})
   const { name: community } = useParams()
 
@@ -73,8 +74,8 @@ const CreatePost = () => {
       <div className='divider mt-[-15px]'></div>
       <div className='flex items-center p-6 pt-0 gap-4 text-slate-300 w-full  '>
         <div className="avatar">
-          <div className="w-14 rounded-full">
-            <img src={authUser.profileImg} />
+          <div className="w-14 rounded-full bg-[rgb(40,41,50)]">
+            <img src={authUser.profileImg} onLoad={() => setAvatarLoading(false)} className={`${avatarLoading ? "opacity-0" : "opacity-[1]"}`}/>
           </div>
         </div>
         <form onSubmit={handleSubmit}>

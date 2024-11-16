@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { CiSearch } from "react-icons/ci";
 import { IoPersonAddOutline } from "react-icons/io5";
 import { AiOutlineMessage } from "react-icons/ai";
@@ -11,8 +11,9 @@ import { toast } from "react-hot-toast"
 
 
 const Header = () => {
+  const [avatarLoading, setAvatarLoading] = useState(true)
     const { data: authUser, isLoading } = useQuery({queryKey: ['authUser']})
-    const { data: notifications} = useQuery({queryKey: ['notifications']})
+    // const { data: notifications} = useQuery({queryKey: ['notifications']})
     const navigate = useNavigate()
     const { mutate: mutateLogout } = useMutation({
         mutationFn: async () => {
@@ -44,9 +45,6 @@ const Header = () => {
             <IoLogOutOutline onClick={mutateLogout} className='rotate-180 cursor-pointer' size={23}/>
             <AiOutlineMessage size={23}/>
             <Link to={'/notifications'} className='relative'>
-                {Array.isArray(notifications) && notifications.some(notification => !notification.read) && (
-                    <div className='absolute w-[10px] h-[10px] rounded-full bg-blue-500 top-0 right-0'></div>
-                )}
                 <IoIosNotificationsOutline size={23}/>
             </Link>
             {
@@ -54,8 +52,8 @@ const Header = () => {
                 <div className='skeleton w-12 h-12 rounded-full'></div>
                 :
                 <Link to={`/profile/${authUser.username}`} className="avatar">
-                    <div className="w-12 rounded-full">
-                        <img src={authUser.profileImg} />
+                    <div className="w-12 rounded-full bg-[rgb(40,41,50)]">
+                        <img src={authUser.profileImg} onLoad={() => setAvatarLoading(false)} className={`${avatarLoading ? "opacity-0" : "opacity-[1]"}`}/>
                     </div>
                 </Link>
             }

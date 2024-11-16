@@ -8,6 +8,7 @@ const userSchema = new Schema({
     followers: [{type: Schema.Types.ObjectId, ref: 'User', default: []}],
     following: [{type: Schema.Types.ObjectId, ref: 'User', default: []}],
     communities: [{type: Schema.Types.ObjectId, ref: "Community", default: []}],
+    notify: [{ type: Schema.Types.ObjectId, ref: 'User', default: []}],
     profileImg: {type: String, default: ''},
     coverImg: {type: String, default: ''},
     bio: {type: String, default: ''},

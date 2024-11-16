@@ -13,6 +13,7 @@ import SingleRepostUser from './SingleRepostUser';
 
 const SinglePost = ({comments, createdAt, likes, user, text, _id, img, community}) => {
     const [selectedRepostUser, setSelectedRepostUser] = useState('')
+    const [avatarLoading, setAvatarLoading] = useState(true)
     const navigate = useNavigate()
     const [showComments, setShowComments] = useState(false)
     const [comment, setComment] = useState("")
@@ -157,8 +158,8 @@ const SinglePost = ({comments, createdAt, likes, user, text, _id, img, community
         <div className='bg-[rgb(28,28,37)] mt-6 rounded-xl'>
             <div className='flex items-center gap-4 p-6 pb-0'>
                 <div onClick={() => navigate(community ? `/communities/${community.name}` : `/profile/${user.username}`)} className="avatar cursor-pointer">
-                    <div className={`w-16 ${community ? " rounded-xl" : "rounded-full"}`}>
-                        <img src={community ? community.profileImg : user.profileImg} />
+                    <div className={`w-16 ${community ? " rounded-xl" : "rounded-full"} bg-[rgb(40,41,50)]`}>
+                        <img src={community ? community.profileImg : user.profileImg} onLoad={() => setAvatarLoading(false)} className={`${avatarLoading ? "opacity-0" : "opacity-[1]"}`}/>
                     </div>
                 </div>
                 <div onClick={() => navigate(community ? `/communities/${community.name}` : `/profile/${user.username}`)} className='cursor-pointer'>

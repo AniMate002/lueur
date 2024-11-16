@@ -35,6 +35,19 @@ export const createPost = async (req, res) => {
         
         await newPost.save()
 
+        if(user.notify.length > 0 && !community){
+            const notifications = []
+            for(let receiver_id of user.notify){
+                const newNotification = new Notification()
+                newNotification.type = 'post'
+                newNotification.from = user._id
+                newNotification.to = receiver_id
+                notifications.push(newNotification)
+                // await newNotification.save()
+            }
+            await Notification.insertMany(notifications)
+        }
+
         return res.status(201).json(newPost)
     }catch(e){
         console.log("Error in createPost controller: ", e.message)
@@ -310,7 +323,7 @@ export const repostPost = async (req, res) => {
         
         return res.status(200).json(newNotifications)
     } catch (e) {
-        console.log("Error in getCommunityPosts controller: ", e.message)
-        return res.status(500).json({error: "Internal server error in fetching community posts"})
+        console.log("Error in repostPost controller: ", e.message)
+        return res.status(500).json({error: "Internal server error in sharing post"})
     }
 }

@@ -17,6 +17,8 @@ export const getNotifications = async (req, res) => {
             path: 'from',
         })
 
+        if(notifications.length === 0) return res.status(200).json([])
+
         await Notification.updateMany({to: user._id}, {read: true})
 
         return res.status(200).json(notifications)

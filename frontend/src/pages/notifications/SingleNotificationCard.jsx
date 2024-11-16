@@ -3,7 +3,7 @@ import { FaHeart } from "react-icons/fa";
 import { RiUserFollowFill } from "react-icons/ri";
 import { useNavigate } from 'react-router-dom';
 import { LuShare2 } from "react-icons/lu";
-
+import { BsTextIndentLeft } from "react-icons/bs";
 
 const SingleNotificationCard = ({from, type}) => {
     const [avatarLoading, setAvatarLoading] = useState(true)
@@ -19,6 +19,9 @@ const SingleNotificationCard = ({from, type}) => {
             <p onClick={() => navigate(`/profile/${from.username}`)} className='text-slate-500 cursor-pointer'>@{from.username}</p>
             <p className='mt-8 text-slate-300 uppercase mb-2'>
                 {
+                    type === "post" ?
+                    "new post"
+                    :
                     type === "like" ? 
                     "Liked your post"
                     :
@@ -29,6 +32,9 @@ const SingleNotificationCard = ({from, type}) => {
                 }
             </p>
             {
+                type === "post" ?
+                < BsTextIndentLeft size={20} className='text-pink-500'/>
+                :
                 type === "like" ?
                 <FaHeart className='text-red-600'/>
                 :

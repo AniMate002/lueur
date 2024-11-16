@@ -1,17 +1,20 @@
 
 
-
+import { FaRegBell, FaRegBellSlash } from "react-icons/fa";
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import React from 'react'
+import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { Link, useParams } from 'react-router-dom'
 
 const ProfileCard = ({isMyPage}) => {
     // const { username } = useParams()
+    const [avatarLoading, setAvatarLoading] = useState(true)
     const queryClient = useQueryClient()
     const { data: authUser, isLoading: authIsLoading} = useQuery({queryKey: ['authUser']})
     const { data:userProfile, isLoading } = useQuery({queryKey: ['userProfile']})
     const { data:userPosts, postsIsLoading } = useQuery({queryKey: ['userPosts']})
+    const isFollowing = isLoading ? false : authUser?.following?.some(user => user._id.toString() === userProfile._id.toString())
+    const notifyMe = isLoading ? false : userProfile?.notify?.includes(authUser._id.toString()) 
 
     const { mutate } = useMutation({
         mutationFn: async () => {
@@ -41,6 +44,33 @@ const ProfileCard = ({isMyPage}) => {
         }
     })
 
+
+    const { mutate: mutateNotifyMe, isPending: isPendingNotifyMe} = useMutation({
+        mutationFn: async () => {
+            try {
+                const res = await fetch(`/api/users/notifyme/${userProfile.username}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: ""
+                })
+
+                const data = await res.json()
+                if(data.error) throw new Error(data.error)
+                queryClient.invalidateQueries({queryKey: ['authUser']})
+                queryClient.invalidateQueries({queryKey: ['userProfile']})
+                console.log("NOTIFY_ME: ", data)
+                toast.success(data.message)
+                return data
+            } catch (error) {
+                console.log(error.message)
+                toast.error(error.message)
+            }
+        }
+    })
+
+
     const handleFollow = () => {
         // alert(username)
         mutate()
@@ -53,7 +83,7 @@ const ProfileCard = ({isMyPage}) => {
                 isLoading ?
                 ""
                 :
-                <img className='bg-[rgb(28,28,37)] min-w-full min-h-full' src={!isLoading ? userProfile.coverImg : 'https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'} alt="coverimg" />
+                <img className='bg-[rgb(28,28,37)] min-w-full min-h-full' src={userProfile.coverImg} />
             }
         </div>
         
@@ -65,8 +95,8 @@ const ProfileCard = ({isMyPage}) => {
                     <div className='skeleton w-48 h-48 block rounded-full'></div>
                     :
                     <div className="avatar">
-                        <div className="w-48 rounded-full">
-                            <img src={isLoading ? "" : userProfile.profileImg} />
+                        <div className="w-48 rounded-full bg-[rgb(40,41,50)]">
+                            <img src={isLoading ? "" : userProfile.profileImg} onLoad={() => setAvatarLoading(false)} className={`${avatarLoading ? "opacity-0" : "opacity-[1]"}`}/>
                         </div>
                     </div>
                 }
@@ -91,10 +121,25 @@ const ProfileCard = ({isMyPage}) => {
                 :
                 <div className='flex items-center gap-6 mr-32 py-4'>
                     {
+                        isFollowing
+                        && 
+                        <button disabled={isPendingNotifyMe} onClick={mutateNotifyMe} className={`flex items-center justify-center w-[40px] h-[40px] rounded-xl ${notifyMe ? "bg-[rgb(40,41,50)] text-slate-300" : "bg-blue-500 text-slate-300"}`}>
+                            {
+                                isPendingNotifyMe ?
+                                <span className="loading loading-ring loading-md"></span>
+                                :
+                                notifyMe ? 
+                                <FaRegBellSlash size={21}/>
+                                :
+                                <FaRegBell size={21}/>
+                            }
+                        </button>
+                    }
+                    {
                         !isMyPage ? 
-                        <button onClick={handleFollow} className={` ${ authUser.following.some(user => user._id.toString() === userProfile._id.toString()) ? " border-2 border-[rgb(0,119,254)] text-slate-300" : " bg-[rgb(0,119,254)]"} rounded-xl px-6 py-2`}>
+                        <button onClick={handleFollow} className={` ${ isFollowing ? " border-2 border-[rgb(0,119,254)] text-slate-300" : " bg-[rgb(0,119,254)]"} rounded-xl px-6 py-2`}>
                         {
-                            authUser.following.some(user => user._id.toString() === userProfile._id.toString()) ?
+                            isFollowing ?
                             "Unfollow"
                             :
                             "Follow"

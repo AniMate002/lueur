@@ -18,11 +18,12 @@ const NotificationsCards = () => {
         )
     }
 
-    const renderedNotifications = notifications?.map(notification => <SingleNotificationCard key={notification?._id} {...notification}/>)
-
     if(notifications?.length === 0){
         return <p className='text-slate-300 w-fit mx-auto text-center mt-56 text-4xl bg-[rgb(28,28,37)] px-10 py-16 rounded-xl'>No notifications found <FaRegSadTear className='inline' /></p>
     }
+    
+    const renderedNotifications = notifications?.map(notification => <SingleNotificationCard key={notification?._id} {...notification}/>)
+    
 
     return (
         <div className='mt-8 grid grid-cols-3 gap-4'>
