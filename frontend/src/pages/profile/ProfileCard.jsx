@@ -16,7 +16,7 @@ const ProfileCard = ({isMyPage}) => {
     const isFollowing = isLoading ? false : authUser?.following?.some(user => user._id.toString() === userProfile._id.toString())
     const notifyMe = isLoading ? false : userProfile?.notify?.includes(authUser._id.toString()) 
 
-    const { mutate } = useMutation({
+    const { mutate, isPending: isPendingFollowUnfollow } = useMutation({
         mutationFn: async () => {
             try {
                 const res = await fetch(`/api/users/follow/${userProfile._id}`, {
@@ -137,8 +137,11 @@ const ProfileCard = ({isMyPage}) => {
                     }
                     {
                         !isMyPage ? 
-                        <button onClick={handleFollow} className={` ${ isFollowing ? " border-2 border-[rgb(0,119,254)] text-slate-300" : " bg-[rgb(0,119,254)]"} rounded-xl px-6 py-2`}>
+                        <button disabled={isPendingFollowUnfollow} onClick={handleFollow} className={` ${ isFollowing ? " border-2 border-[rgb(0,119,254)] text-slate-300" : " bg-[rgb(0,119,254)]"} rounded-xl w-[120px] h-[45px] flex items-center justify-center`}>
                         {
+                            isPendingFollowUnfollow?
+                            <span className="loading loading-ring loading-md"></span>
+                            :
                             isFollowing ?
                             "Unfollow"
                             :

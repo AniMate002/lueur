@@ -52,7 +52,11 @@ const SignUpPage = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
         console.log(formData)
-        mutate(formData)
+        if(formData.email && formData.username && formData.fullname && formData.password){
+            mutate(formData)
+        }else{
+            toast.error("Please fill in all fields")
+        }
     }
 
     const handleInputChange = (e) => {

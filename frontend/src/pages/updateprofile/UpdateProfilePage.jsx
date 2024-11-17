@@ -139,7 +139,7 @@ const UpdateProfilePage = () => {
                         {/*     LINK     */}
                         <label className="input input-bordered flex items-center gap-2 bg-[rgb(40,41,50)]">
                             <FaLink />
-                            <input value={link} onChange={e => setLink(e.target.value)} type="text" className="grow" placeholder="Email" />
+                            <input value={link} onChange={e => setLink(e.target.value)} type="text" className="grow" placeholder="Link" />
                         </label>
 
                         {/*     BIO     */}

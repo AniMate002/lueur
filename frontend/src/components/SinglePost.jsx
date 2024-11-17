@@ -12,6 +12,7 @@ import { LuShare2 } from "react-icons/lu";
 import SingleRepostUser from './SingleRepostUser';
 
 const SinglePost = ({comments, createdAt, likes, user, text, _id, img, community}) => {
+    const [imageLoading, setImageLoading] = useState(true)
     const [selectedRepostUser, setSelectedRepostUser] = useState('')
     const [avatarLoading, setAvatarLoading] = useState(true)
     const navigate = useNavigate()
@@ -19,7 +20,7 @@ const SinglePost = ({comments, createdAt, likes, user, text, _id, img, community
     const [comment, setComment] = useState("")
     const { data:authUser, isLoading } = useQuery({queryKey: ['authUser']})
     const queryClient = useQueryClient()
-    const { mutate, isPending } = useMutation({
+    const { mutate, isPending: isPendingLike } = useMutation({
         mutationFn: async () => {
             try {
                 const res = await fetch(`/api/posts/like/${_id}`, {
@@ -53,7 +54,7 @@ const SinglePost = ({comments, createdAt, likes, user, text, _id, img, community
         }
     })
     
-    const {mutate: commentMutate} = useMutation({
+    const {mutate: commentMutate, isPending: isPendingComment} = useMutation({
         mutationFn: async () => {
             try{
                 const res = await fetch(`/api/posts/comment/${_id}`, {
@@ -179,7 +180,10 @@ const SinglePost = ({comments, createdAt, likes, user, text, _id, img, community
             
             {
                 img ? 
-                <img src={img} alt='image' className='max-h-[500px] mx-auto max-w-[95%] mt-4 block rounded-xl   mb-8'/>
+                <div className='w-[95%] mx-auto relative max-h-[500px] overflow-hidden flex items-center justify-center mt-4 rounded-xl'>
+                    <img onLoad={() => setImageLoading(false)} src={img} className={`${imageLoading ? "opacity-0" : "opacity-[1]"} w-full blur-2xl opacity-30`}/>
+                    <img src={img} className='max-h-[500px] mx-auto max-w-[95%] block top-[50%] translate-y-[-50%]  absolute mb-8'/>
+                </div>
                 : 
                 ""
             }
@@ -193,8 +197,11 @@ const SinglePost = ({comments, createdAt, likes, user, text, _id, img, community
                     <FaRegComment size={23}/>
                     <p>{comments.length}</p>
                 </button>
-                <button onClick={handleLike} className='flex items-center gap-2 text-slate-500 bg-[rgb(40,41,50)] w-[60px] h-[40px] justify-center rounded-xl'>
+                <button disabled={isPendingLike} onClick={handleLike} className='flex items-center gap-2 text-slate-500 bg-[rgb(40,41,50)] w-[60px] h-[40px] justify-center rounded-xl'>
                     {
+                        isPendingLike ?
+                        <span className="loading loading-ring loading-sm"></span>
+                        :
                         authUser.likedPosts.includes(_id.toString()) ?
                         <FaHeart  className='text-red-600 cursor-pointer'/>
                         :
@@ -230,7 +237,12 @@ const SinglePost = ({comments, createdAt, likes, user, text, _id, img, community
                 </div>
                 <form onSubmit={handleComment} className="input flex-grow input-bordered flex items-center gap-2 text-slate-300 bg-[rgb(40,41,50)] focus-within:outline-none border-none">
                     <input value={comment} onChange={e => setComment(e.target.value)} type="text" className="grow focus:border-none focus:outline-none" placeholder="Write your comment..." />
-                    <button type='submit'><IoSendOutline className='text-slate-400' size={20}/></button>
+                    {
+                        isPendingComment?
+                        <span className="loading loading-spinner loading-md"></span>
+                        :
+                        <button disabled={isPendingComment} type='submit'><IoSendOutline className='text-slate-400' size={20}/></button>
+                    }
                 </form>
             </div>
 

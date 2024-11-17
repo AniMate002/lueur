@@ -15,7 +15,7 @@ const CreatePost = () => {
   const { data: authUser, isLoading} = useQuery({queryKey: ['authUser']})
   const { name: community } = useParams()
 
-  const { mutate, isPending } = useMutation({
+  const { mutate, isPending: isPendingCreatePost } = useMutation({
     mutationFn: async ({text, img}) => {
       try {
         const res = await fetch('/api/posts/create', {
@@ -88,7 +88,14 @@ const CreatePost = () => {
           :
           <RiImageAddLine onClick={() => imgRef.current.click()} size={24} className="text-slate-500 hover:text-slate-300 cursor-pointer transition-all duration-150 ml-auto"/>
         }
-        <IoSendOutline onClick={handleSubmit} size={24} className="text-slate-500 hover:text-slate-300 cursor-pointer transition-all duration-150"/>
+        <button onClick={handleSubmit} disabled={isPendingCreatePost}>
+          {
+            isPendingCreatePost?
+            <span className="loading loading-spinner loading-md text-slate-500"></span>
+            :
+            <IoSendOutline  size={24} className="text-slate-500 hover:text-slate-300 cursor-pointer transition-all duration-150"/>
+          }
+        </button>
       </div>
         {
           !img ? 

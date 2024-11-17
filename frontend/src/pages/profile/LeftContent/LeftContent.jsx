@@ -6,7 +6,7 @@ import AboutMe from './AboutMe'
 
 const LeftContent = () => {
   return (
-    <div className='w-[30%]'>
+    <div className='w-[30%] shrink-0'>
       <Progress />
       <AboutMe />
     </div>
