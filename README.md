@@ -25,27 +25,27 @@
 To start using the project, follow these steps:
 
 1. **Install backend dependencies**.  
-   ``bash
+   ```bash
    npm and
    ```
 2. **Install frontend dependencies**.
-   ``bash
+   ```bash
    cd frontend
    npm i
    ```
 3. build the whole project
-  ``bash
+  ```bash
    npm run build
    ```
 
 ### 🚀 **Starting the project**:
 
 1. **Starting the backend**.
-``bash
+```bash
    npm run dev
 ```
 2. **Starting the frontend**.
-`bash
+```bash
    cd frontend
    npm run dev
 ```
